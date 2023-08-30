@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+    <head>
+        <title>YourPC Log-In</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse ">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="{{url_for('yourPCHome')}}">YourPC</a>
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>                        
+                    </button>
+                    <a class="navbar-brand" href="#" ></a>
+                </div>
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="{{url_for('yourPCHome')}}">Home</a></li>
+                        <li><a href="#footer">Contact Us</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="{{url_for('yourPCHome')}}"><span class="glyphicon glyphicon-user"></span> Cancel</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <p>
+    <img class="img-responsive" src="{{url_for('static',filename='YourPCLogo1.jpg')}}" style="height: 300px; display: block; margin: 0 auto;">
+      </p>
+    <form class="form-horizontal" method="POST" action="/LogIn">
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="email">Email:</label>
+          <div class="col-sm-10">
+            <input type="email" class="form-control" id="email" placeholder="Enter email">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="pwd">Password:</label>
+          <div class="col-sm-10">
+            <input type="password" class="form-control" id="pwd" placeholder="Enter password">
+          </div>
+        </div> 
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-default">Submit</button>
+          </div>
+        </div>
+      </form>
+
+      <section id="footer">
+        <footer class="bg-dark text-center text-white">
+          <!-- Grid container -->
+          <div class="container p-4">
+            <!-- Section: Social media -->
+            <section class="mb-4">
+              <!-- Facebook -->
+              <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+                ><img class="img-responsive" src="{{url_for('static',filename='faceLog.png')}}" alt="feceYourPC" style="width: 30px;height: 30px;"><i class="fab fa-facebook-f"></i
+              ></a>
+        
+              <!-- Twitter -->
+              <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+                ><img class="img-responsive" src="{{url_for('static',filename='twtLog.png')}}" alt="twtYourPC" style="width: 30px;height: 30px;"><i class="fab fa-twitter"></i
+              ></a>
+        
+              <!-- Google -->
+              <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+                ><img class="img-responsive" src="{{url_for('static',filename='googLog.png')}}" alt="googYourPC" style="width: 30px;height: 30px;"><i class="fab fa-google"></i
+              ></a>
+        
+              <!-- Instagram -->
+              <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+                ><img class="img-responsive" src="{{url_for('static',filename='instLog.png')}}" alt="instYourPC" style="width: 30px;height: 30px;"><i class="fab fa-instagram"></i
+              ></a>
+            </section>
+            <!-- Section: Social media -->
+        
+            <!-- Section: Text -->
+            <section class="mb-4">
+              <div id="contact" class="container-fluid bg-grey">
+                <h2 class="text-center">CONTACT</h2>
+                <div class="row">
+                  <div class="col-sm-5">
+                    <p>Contact us and we'll get back to you within 24 hours.</p>
+                    <p><span class="glyphicon glyphicon-map-marker"></span> Guadalajara, MX</p>
+                    <p><span class="glyphicon glyphicon-phone"></span> +52 33 3445 7677</p>
+                    <p><span class="glyphicon glyphicon-envelope"></span> YourPCTeam@gmail.com</p>
+                  </div>
+                  <form action="https://fromsubmit.co/YourPCTeam@gmail.com" method="post">
+                  <div class="col-sm-7 slideanim">
+                    <div class="row">
+                      <div class="col-sm-6 form-group">
+                        <input class="form-control" id="name" name="name" placeholder="Name" type="text" required>
+                      </div>
+                      <div class="col-sm-6 form-group">
+                        <input class="form-control" id="email" name="email" placeholder="Email" type="email" required>
+                      </div>
+                    </div>
+                    <textarea class="form-control" id="comments" name="comments" placeholder="Comment" rows="5"></textarea><br>
+                    <div class="row">
+                      <div class="col-sm-12 form-group">
+                        <button class="btn btn-default pull-right" type="submit">Send</button>
+                      </div>
+                    </div>
+                  </form>
+                  </div>
+                </div>
+              </div>
+              
+            </section>
+            <!-- Section: Text -->
+          </div>
+          <!-- Grid container -->
+        
+          <!-- Copyright -->
+          <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+            © 2020 Copyright:
+            <a class="text-white" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+          </div>
+          <!-- Copyright -->
+        </footer>
+        </section>
+</body>
+</html>
