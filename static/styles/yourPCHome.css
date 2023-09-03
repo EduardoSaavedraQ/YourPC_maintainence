@@ -1,0 +1,112 @@
+.carousel-img {
+    height: 100%;
+    width: 100%;
+}
+
+.carousel-caption {
+    color: black;
+}
+
+.carousel-caption h3 {
+    font-size: 36px;
+}
+
+.carousel-caption p {
+    font-size: 24px;
+}
+
+#about {
+    text-align: "center";
+    color: aliceblue;
+    background-color: #555;
+}
+
+#about h3 {
+    font-size: 36px;
+}
+
+#about p {
+    font-size: 18px;
+}
+
+.YourPCLogo {
+    width: 200px;
+    height: 120px;
+}
+
+#Ofertas h2{
+    font-size: 36px;
+    text-align: "center";
+    color: black;
+}
+
+#Ofertas p {
+    font-size: 18px;
+    text-align: "center";
+    color: black;
+}
+
+#PCs h2{
+    font-size: 36px;
+    text-align: "center";
+    color: white;
+}
+
+#PCs p {
+    font-size: 18px;
+    text-align: "center";
+    color: white;
+}
+
+
+/* Set purple background color and 100% height */
+.sidenav {
+    padding-top: 20px;
+    background-color: purple;
+    height: 100%;
+}
+
+.img-recomendations {
+    width: 100%;
+}
+
+/* Remove the navbar's default margin-bottom and rounded borders */
+.navbar {
+    margin-bottom: 0;
+    border-radius: 0;
+}
+/* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+.row.content {
+    height: 450px
+}
+
+#PCs {
+    background-color: #555;
+}
+
+/* Set gray background color, white text and some padding */
+footer {
+    background-color: #555;
+    color: white;
+    padding: 15px;
+}
+
+#social-media img {
+    width: 30px;
+    height: 30px;
+}
+
+#copyright {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* On small screens, set height to 'auto' for sidenav and grid */
+@media screen and (max-width: 767px) {
+    .sidenav {
+        height: auto;
+        padding: 15px;
+    }
+    .row.content {
+        height: auto;
+    }
+}

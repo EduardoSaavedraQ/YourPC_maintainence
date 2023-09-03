@@ -1,5 +1,7 @@
 __pycache__/
-static/
+static/*
+!static/styles/
 yourpc.ini
 LEEME.txt
 respaldoYourPC.sql
+tests/
