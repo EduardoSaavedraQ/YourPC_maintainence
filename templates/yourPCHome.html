@@ -14,14 +14,7 @@
         <div class="container-fluid">
           <div class="navbar-header">
             <a class="navbar-brand" href="#">YourPC</a>
-            <!-- <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#"></a> -->
           </div>
-          <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav">
               <li class="active"><a href="#myCarousel">Home</a></li>
               <li><a href="#about">Acerca de</a></li>
@@ -30,10 +23,15 @@
               <li><a href="#footer">Contáctanos</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+            {% if current_user.is_authenticated %}
+              <li><a href="#">Hola, {{current_user.id}}</a></li>
+              <li><a href="#">Libreta</a></li>
+              <li><a href="\logout">Cerrar sesión</a></li>
+            {% else %}
               <li><a href="{{ url_for('logIn') }}"><span class="glyphicon glyphicon-log-in"></span> Acceder</a></li>
               <li><a href="{{ url_for('formulario') }}"><span class="glyphicon glyphicon-user"></span> Crear cuenta</a></li>
+            {% endif %}
             </ul>
-          </div>
         </div>
       </nav>
       <section id="myCarousel" class="carousel slide" data-ride="carousel">
