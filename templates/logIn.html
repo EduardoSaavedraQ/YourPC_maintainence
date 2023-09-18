@@ -9,6 +9,11 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     </head>
     <body>
+      {% if error %}
+    <div class="alert alert-danger" role="alert">
+        El correo y/o la contrasenia no coinciden.
+    </div>
+  {% endif %}
         <nav class="navbar navbar-inverse ">
             <div class="container-fluid">
                 <div class="navbar-header">

@@ -1,5 +1,6 @@
 from flask import Flask, render_template, url_for, request, redirect
 from flask_login import LoginManager, UserMixin, login_user, logout_user
+from werkzeug.security import generate_password_hash, check_password_hash
 import psycopg2
 from conectar import conectar
 
@@ -36,112 +37,61 @@ def startPage():
 
 @app.route('/SignIn', methods=['POST'])
 def SignIn():
-    nombreUsua = request.form['nombre']
-    correoUsua = request.form['correo']
-    contrasenia = request.form['contrasenia']
-
-    conn = conectar()
-    cur = conn.cursor()
-    cur.execute("INSERT INTO usuario VALUES (%s, %s, %s);",(nombreUsua,correoUsua,contrasenia))
-
-    return render_template("startPage.html")
-
-
-""" @app.route("/LogIn", methods=['POST'])
-def LogIn():
-    correo = request.form.get("email")
-    contrasenia = request.form.get("pwd")
-
-    no_match = "El correo y/o la contraseña son incorrectos"
-    retorno = "startPage.html"
-
-    try:
-        conn = conectar()
-        cur = conn.cursor()
-        print(correo)
-        print(contrasenia)
-        cur.execute(
-            "SELECT correo, contrasenia FROM usuario WHERE correo = '%s' AND contrasenia = '%s';",(correo, contrasenia))
-        r = cur.fetchall()
-        if len(r) == 0:
-            raise Exception(no_match)
-        
-        retorno="startPage.html"
-
-    except (psycopg2.DatabaseError, Exception) as error:
-        if str(error) == no_match:
-            retorno = "logIn.html"
-        print(error)
-    finally:
-        cur.close()
-        conn.close()
-        return render_template(retorno)
-
- """
-
-""" @app.route('/LogIn', methods=['POST'])
-def LogIn():
-    correo = request.form.get("email")
-    contrasenia = request.form.get("pwd")
-
-    no_match = "El correo y/o la contraseña son incorrectos"
-
+    user_id = request.form['nombre']
+    email = request.form['correo']
+    pwd = request.form['pwd']
+    # Verifica si el usuario o el correo ya existen en la base de datos
     try:
         conn = conectar()
         cur = conn.cursor()
 
-        cur.execute(f"SELECT * FROM usuario WHERE correo = '{correo}';")
+        cur.execute("SELECT pk_nickname, correo FROM usuario WHERE pk_nickname = %s OR correo = %s;", (user_id, email))
+
         res = cur.fetchone()
 
         if res is None:
-            raise Exception(no_match)
-
-        print(res)
-        id = res[0]
-        user = User(id)
-        login_user(user)
-                
-        return redirect(url_for('yourPCHome'))
-        #return render_template('yourPCHome.html', url_for=url_for)
+            hashed_pwd = generate_password_hash(pwd)
+            cur.execute("INSERT INTO usuario VALUES(%s, %s, %s);", (user_id, email, hashed_pwd))
+            user = User(user_id)
+            login_user(user)
+            return redirect(url_for('yourPCHome'))
         
-    except(psycopg2.DatabaseError, Exception) as error:
-        if error is no_match:
-            p = 1
-    
+        return render_template("formulario.html", error=True)
+    except(psycopg2.DatabaseError) as error:
+        print(error)
     finally:
-        cur.close()
-        conn.close() """
+        if cur is not None:
+            cur.close()
+            conn.close()
 
 @app.route("/LogIn", methods=['POST'])
 def LogIn():
-    correo = request.form.get("email")
-
-    no_match = "El correo y/o la contraseña son incorrectos"
+    correo = request.form['email']
+    pwd = request.form['pwd']
 
     try:
         conn = conectar()
         cur = conn.cursor()
 
-        cur.execute(f"SELECT * FROM usuario WHERE correo = '{correo}';")
+        cur.execute(f"SELECT pk_nickname, correo, contrasenia FROM usuario WHERE correo = '{correo}';")
         res = cur.fetchone()
 
-        if res is None:
-            raise Exception(no_match)
+        if res is None or check_password_hash(res[2], pwd) is False:
+            return render_template("login.html", error=True)
 
         id = res[0]
         user = User(id)
         login_user(user)
                 
         return redirect(url_for('yourPCHome'))
-        #return render_template('yourPCHome.html', url_for=url_for)
         
-    except(psycopg2.DatabaseError, Exception) as error:
-        if error is no_match:
-            p = 1
+    except(psycopg2.DatabaseError) as error:
+        print(error)
     
     finally:
-        cur.close()
-        conn.close()
+        if cur is not None:
+            cur.close()
+            conn.close()
 
 @app.route('/logout')
 def logout():
