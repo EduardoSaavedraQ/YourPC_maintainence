@@ -40,6 +40,11 @@ def SignIn():
     user_id = request.form['nombre']
     email = request.form['correo']
     pwd = request.form['pwd']
+    length_pwd = len(pwd)
+    
+    #Comprueba la longitud de la contraseña
+    if length_pwd < 5 or len(pwd) > 15:
+        return render_template("formulario.html", error_pwd=True)
     # Verifica si el usuario o el correo ya existen en la base de datos
     try:
         conn = conectar()
@@ -56,7 +61,7 @@ def SignIn():
             login_user(user)
             return redirect(url_for('yourPCHome'))
         
-        return render_template("formulario.html", error=True)
+        return render_template("formulario.html", repited_account=True)
     except(psycopg2.DatabaseError) as error:
         print(error)
     finally:

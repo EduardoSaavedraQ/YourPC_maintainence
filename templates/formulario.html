@@ -12,7 +12,12 @@
 </head>
 
 <body>
-  {% if error %}
+  {% if error_pwd %}
+    <div class="alert alert-danger" role="alert">
+        La contraseña debe contener entre 5 y 15 caracteres.
+    </div>
+  {% endif %}
+  {% if repited_account %}
     <div class="alert alert-danger" role="alert">
         El usuario o el correo ya existen.
     </div>
