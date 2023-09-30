@@ -23,9 +23,9 @@ def load_user(user_id):
 def yourPCHome():
     return render_template("yourPCHome.html", url_for=url_for)
 
-@app.route('/formulario')
-def formulario():
-    return render_template("formulario.html",url_for=url_for)
+@app.route('/signUp')
+def signUp():
+    return render_template("signUP.html",url_for=url_for)
 
 @app.route('/logIn')
 def logIn():
@@ -35,8 +35,8 @@ def logIn():
 def startPage():
     return render_template("startPage.html",url_for=url_for)
 
-@app.route('/SignIn', methods=['POST'])
-def SignIn():
+@app.route('/SignUp', methods=['POST'])
+def SignUp():
     user_id = request.form['nombre']
     email = request.form['correo']
     pwd = request.form['pwd']
@@ -44,7 +44,7 @@ def SignIn():
     
     #Comprueba la longitud de la contraseña
     if length_pwd < 5 or len(pwd) > 15:
-        return render_template("formulario.html", error_pwd=True)
+        return render_template("signUp.html", error_pwd=True)
     # Verifica si el usuario o el correo ya existen en la base de datos
     try:
         conn = conectar()
@@ -61,7 +61,7 @@ def SignIn():
             login_user(user)
             return redirect(url_for('yourPCHome'))
         
-        return render_template("formulario.html", repited_account=True)
+        return render_template("signUp.html", repited_account=True)
     except(psycopg2.DatabaseError) as error:
         print(error)
     finally:

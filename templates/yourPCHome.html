@@ -31,7 +31,7 @@
               <li><a href="\logout">Cerrar sesión</a></li>
             {% else %}
               <li><a href="{{ url_for('logIn') }}"><span class="glyphicon glyphicon-log-in"></span> Acceder</a></li>
-              <li><a href="{{ url_for('formulario') }}"><span class="glyphicon glyphicon-user"></span> Crear cuenta</a></li>
+              <li><a href="{{ url_for('signUp') }}"><span class="glyphicon glyphicon-user"></span> Crear cuenta</a></li>
             {% endif %}
             </ul>
         </div>
