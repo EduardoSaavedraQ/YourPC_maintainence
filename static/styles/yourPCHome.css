@@ -1,10 +1,15 @@
+
+#myCarousel {
+    background-color: #555;
+}
+
 .carousel-img {
-    height: 100%;
-    width: 100%;
+    width: 75%;
+    margin: auto;
 }
 
 .carousel-caption {
-    color: black;
+    color: brown;
 }
 
 .carousel-caption h3 {
@@ -109,4 +114,14 @@ footer {
     .row.content {
         height: auto;
     }
+}
+
+.panel-body {
+    min-height: 400px;
+}
+
+.promoimages{
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
 }
