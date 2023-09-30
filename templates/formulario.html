@@ -53,27 +53,25 @@
     <div class="form-group">
       <label class="control-label col-sm-2" for="email">Nombre de usuario:</label>
       <div class="col-sm-10">
-        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese un nombre de usuario">
+        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese un nombre de usuario" required>
       </div>
     </div>
     <div class="form-group">
       <label class="control-label col-sm-2" for="email">Email:</label>
       <div class="col-sm-10">
-        <input type="email" class="form-control" id="correo" name="correo" placeholder="Ingrese un correo electrónico">
+        <input type="email" class="form-control" id="correo" name="correo" placeholder="Ingrese un correo electrónico" required>
       </div>
     </div>
     <div class="form-group">
       <label class="control-label col-sm-2" for="pwd">Contraseña:</label>
       <div class="col-sm-10">
-        <input type="password" class="form-control" id="pwd" name="pwd"
-          placeholder="Ingrese una contraseña">
+        <input type="password" class="form-control" id="pwd" name="pwd" placeholder="Ingrese una contraseña" required>
       </div>
     </div>
     <div class="form-group">
       <label class="control-label col-sm-2" for="pwd-confirm">Confirmar contraseña:</label>
       <div class="col-sm-10">
-        <input type="password" class="form-control" id="pwd-confirm" name="pwd-confirm"
-          placeholder="Repita la contraseña">
+        <input type="password" class="form-control" id="pwd-confirm" name="pwd-confirm" placeholder="Repita la contraseña" required>
       </div>
     </div>
     <div class="form-group">
@@ -155,22 +153,8 @@
   <!-- Copyright -->
   </footer>
   </section>
-
-  <script>
-    document.querySelector('form').addEventListener('submit', function(event) {
-      // Obtén los valores de los campos de contraseña
-      var pwd = document.getElementById('pwd').value;
-      var pwdConfirm = document.getElementById('pwd-confirm').value;
-    
-      // Compara las contraseñas
-      if (pwd !== pwdConfirm) {
-        // Si las contraseñas no coinciden, muestra un mensaje y evita el envío del formulario
-        alert('Las contraseñas no coinciden.');
-        event.preventDefault();
-      }
-    });
-
-  </script>
+  
+  <script src="../static/js/signUp.js"></script>
 </body>
 
 </html>
