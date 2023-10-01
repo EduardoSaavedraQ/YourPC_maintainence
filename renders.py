@@ -50,12 +50,12 @@ def SignUp():
         conn = conectar()
         cur = conn.cursor()
 
-        cur.execute("SELECT pk_nickname, correo FROM usuario WHERE pk_nickname = %s OR correo = %s;", (user_id, email))
+        cur.execute("SELECT pk_nickname, correo FROM usuario WHERE UPPER(pk_nickname) = %s OR UPPER(correo) = %s;", (user_id.upper(), email.upper()))
 
         res = cur.fetchone()
 
         if res is None:
-            hashed_pwd = generate_password_hash(pwd)
+            hashed_pwd = generate_password_hash(pwd) #Default method="pbkdf2:sha1", alternativa method="pbkdf2:sha512"
             cur.execute("INSERT INTO usuario VALUES(%s, %s, %s);", (user_id, email, hashed_pwd))
             user = User(user_id)
             login_user(user)
