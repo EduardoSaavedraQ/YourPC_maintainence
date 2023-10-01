@@ -50,7 +50,7 @@ def SignUp():
         conn = conectar()
         cur = conn.cursor()
 
-        cur.execute("SELECT pk_nickname, correo FROM usuario WHERE pk_nickname = %s OR correo = %s;", (user_id, email))
+        cur.execute("SELECT pk_nickname, correo FROM usuario WHERE UPPER(pk_nickname) = %s OR UPPER(correo) = %s;", (user_id.upper(), email.upper()))
 
         res = cur.fetchone()
 
