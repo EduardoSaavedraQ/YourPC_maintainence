@@ -41,7 +41,7 @@ def SignUp():
     email = request.form['correo']
     pwd = request.form['pwd']
     length_pwd = len(pwd)
-    
+
     #Comprueba la longitud de la contraseña
     if length_pwd < 5 or len(pwd) > 15:
         return render_template("signUp.html", error_pwd=True)
@@ -55,12 +55,12 @@ def SignUp():
         res = cur.fetchone()
 
         if res is None:
-            hashed_pwd = generate_password_hash(pwd) #Default method="pbkdf2:sha1", alternativa method="pbkdf2:sha512"
+            hashed_pwd = generate_password_hash(pwd)
             cur.execute("INSERT INTO usuario VALUES(%s, %s, %s);", (user_id, email, hashed_pwd))
             user = User(user_id)
             login_user(user)
             return redirect(url_for('yourPCHome'))
-        
+
         return render_template("signUp.html", repited_account=True)
     except(psycopg2.DatabaseError) as error:
         print(error)
@@ -87,12 +87,12 @@ def LogIn():
         id = res[0]
         user = User(id)
         login_user(user)
-                
+
         return redirect(url_for('yourPCHome'))
-        
+
     except(psycopg2.DatabaseError) as error:
         print(error)
-    
+
     finally:
         if cur is not None:
             cur.close()
@@ -102,6 +102,3 @@ def LogIn():
 def logout():
     logout_user()
     return redirect(url_for('yourPCHome'))
-
-if __name__ == '__main__':
-    app.run(debug=True, port=5001)
