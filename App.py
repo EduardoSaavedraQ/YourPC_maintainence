@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect
 from flask_login import LoginManager, UserMixin, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
-import psycopg2
+import mysql.connector
 from conectar import conectar
 
 app = Flask(__name__)
@@ -50,20 +50,22 @@ def SignUp():
         conn = conectar()
         cur = conn.cursor()
 
-        cur.execute("SELECT pk_nickname, correo FROM usuario WHERE UPPER(pk_nickname) = %s OR UPPER(correo) = %s;", (user_id.upper(), email.upper()))
+        cur.execute("SELECT pk_nickname, correo FROM usuarios WHERE UPPER(pk_nickname) = %s OR UPPER(correo) = %s;", (user_id.upper(), email.upper()))
 
         res = cur.fetchone()
 
         if res is None:
             hashed_pwd = generate_password_hash(pwd) #Default method="pbkdf2:sha1", alternativa method="pbkdf2:sha512"
-            cur.execute("INSERT INTO usuario VALUES(%s, %s, %s);", (user_id, email, hashed_pwd))
+            cur.execute(f"INSERT INTO usuarios(pk_nickname, correo, contrasenia) VALUES('{user_id}', '{email}', '{hashed_pwd}');")
             user = User(user_id)
             login_user(user)
             return redirect(url_for('yourPCHome'))
         
         return render_template("signUp.html", repited_account=True)
-    except(psycopg2.DatabaseError) as error:
+    except(mysql.connector.Error) as error:
+        
         print(error)
+        print("hola")
     finally:
         if cur is not None:
             cur.close()
@@ -78,7 +80,7 @@ def LogIn():
         conn = conectar()
         cur = conn.cursor()
 
-        cur.execute(f"SELECT pk_nickname, correo, contrasenia FROM usuario WHERE correo = '{correo}';")
+        cur.execute(f"SELECT pk_nickname, correo, contrasenia FROM usuarios WHERE correo = '{correo}';")
         res = cur.fetchone()
 
         if res is None or check_password_hash(res[2], pwd) is False:
@@ -90,7 +92,7 @@ def LogIn():
                 
         return redirect(url_for('yourPCHome'))
         
-    except(psycopg2.DatabaseError) as error:
+    except(mysql.connector.Error) as error:
         print(error)
     
     finally:
