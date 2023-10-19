@@ -2,7 +2,7 @@ from flask import Flask, render_template, url_for, request, redirect
 from flask_login import LoginManager, UserMixin, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
-from config import config
+from conectar import conectar
 
 app = Flask(__name__)
 app.secret_key = 'una clave secreta muy segura'
@@ -37,7 +37,6 @@ def startPage():
 
 @app.route('/SignUp', methods=['POST'])
 def SignUp():
-    #from conectar import conectar
 
     user_id = request.form['nombre']
     email = request.form['correo']
@@ -49,10 +48,7 @@ def SignUp():
         return render_template("signUp.html", error_pwd=True)
     # Verifica si el usuario o el correo ya existen en la base de datos
     try:
-        #conn = conectar()
-        #conn = mysql.connector.connect(**config())
-        conn = mysql.connector.connect(host='EduardoSQ.mysql.pythonanywhere-services.com', user='EduardoSQ', passwd='Argent%04', db='EduardoSQ$YourPC')
-        conn.autocommit = True
+        conn = conectar()
         cur = conn.cursor()
 
         cur.execute("SELECT pk_nickname, correo FROM usuarios WHERE UPPER(pk_nickname) = %s OR UPPER(correo) = %s;", (user_id.upper(), email.upper()))
@@ -81,10 +77,7 @@ def LogIn():
     pwd = request.form['pwd']
 
     try:
-        #conn = conectar()
-        #conn = mysql.connector.connect(**config())
-        conn = mysql.connector.connect(host='EduardoSQ.mysql.pythonanywhere-services.com', user='EduardoSQ', passwd='Argent%04', db='EduardoSQ$YourPC')
-        conn.autocommit = True
+        conn = conectar()
         cur = conn.cursor()
 
         cur.execute(f"SELECT pk_nickname, correo, contrasenia FROM usuarios WHERE correo = '{correo}';")
@@ -111,9 +104,3 @@ def LogIn():
 def logout():
     logout_user()
     return redirect(url_for('yourPCHome'))
-
-"""conn = conectar()
-cur = conn.cursor()
-cur.execute("show databases;")
-res = cur.fetchall()
-print(res)"""
