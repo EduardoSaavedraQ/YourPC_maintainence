@@ -27,6 +27,18 @@
             <ul class="nav navbar-nav navbar-right">
             {% if current_user.is_authenticated %}
               <li><a href="#">Hola, {{current_user.id}}</a></li>
+              {% if admin %}
+              <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Operaciones de administrador
+                <span class="caret"></span></a>
+                <ul class="dropdown-menu" >
+                  <li><a href="#">Registrar PC</a></li>
+                  <li><a href="#">Modificar PC</a></li>
+                  <li><a href="#">Eliminar PC</a></li>
+                  <li><a href="#">Agregar nuevo administrador</a></li>
+                </ul>
+              </li>
+              {% endif %}
               <li><a href="#">Libreta</a></li>
               <li><a href="\logout">Cerrar sesión</a></li>
             {% else %}

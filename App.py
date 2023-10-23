@@ -12,6 +12,7 @@ login_manager.init_app(app)
 class User(UserMixin):
     def __init__(self, id):
         self.id = id
+        self.is_admin = False
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -21,7 +22,7 @@ def load_user(user_id):
 
 @app.route('/')
 def yourPCHome():
-    return render_template("yourPCHome.html", url_for=url_for)
+    return render_template("yourPCHome.html")
 
 @app.route('/signUp')
 def signUp():
@@ -34,6 +35,10 @@ def logIn():
 @app.route('/startPage')
 def startPage():
     return render_template("startPage.html",url_for=url_for)
+
+@app.route('/createAdminUser')
+def createAdminUserPage():
+    return render_template("createAdminUser.html", url_for=url_for)
 
 @app.route('/SignUp', methods=['POST'])
 def SignUp():
@@ -80,7 +85,7 @@ def LogIn():
         conn = conectar()
         cur = conn.cursor()
 
-        cur.execute(f"SELECT pk_nickname, correo, contrasenia FROM usuarios WHERE correo = '{correo}';")
+        cur.execute(f"SELECT pk_nickname, correo, contrasenia, admin FROM usuarios WHERE correo = '{correo}';")
         res = cur.fetchone()
 
         if res is None or check_password_hash(res[2], pwd) is False:
@@ -88,9 +93,10 @@ def LogIn():
 
         id = res[0]
         user = User(id)
+        admin = bool(res[3])
         login_user(user)
 
-        return redirect(url_for('yourPCHome'))
+        return render_template("yourPCHome.html", admin=admin)
 
     except(mysql.connector.Error) as error:
         print(error)
@@ -104,3 +110,6 @@ def LogIn():
 def logout():
     logout_user()
     return redirect(url_for('yourPCHome'))
+
+if __name__ == '__main__':
+    app.run(debug=True)
