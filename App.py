@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, request, redirect
-from flask_login import LoginManager, UserMixin, login_user, logout_user
+from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
 from conectar import conectar
@@ -10,9 +10,9 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 class User(UserMixin):
-    def __init__(self, id):
+    def __init__(self, id, is_admin=False):
         self.id = id
-        self.is_admin = False
+        self.is_admin = is_admin
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -35,6 +35,10 @@ def logIn():
 @app.route('/startPage')
 def startPage():
     return render_template("startPage.html",url_for=url_for)
+
+@app.route('/addPCPage')
+def addPCPage():
+    return render_template("addPC.html", url_for=url_for)
 
 @app.route('/createAdminUser')
 def createAdminUserPage():
@@ -92,11 +96,9 @@ def LogIn():
             return render_template("logIn.html", error=True)
 
         id = res[0]
-        user = User(id)
-        admin = bool(res[3])
+        user = User(id, bool(res[3]))
         login_user(user)
-
-        return render_template("yourPCHome.html", admin=admin)
+        return render_template("yourPCHome.html")
 
     except(mysql.connector.Error) as error:
         print(error)
