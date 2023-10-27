@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 import mysql.connector
 from conectar import conectar
 
@@ -112,6 +113,32 @@ def LogIn():
 def logout():
     logout_user()
     return redirect(url_for('yourPCHome'))
+
+@app.route('/uploadPC/<string:admin_id>', methods=['POST'])
+def uploadPC(admin_id):
+    nombrePC = request.form['Nombre']
+    descripcionPC = request.form['Descripcion']
+    precioPC = round(float(request.form['Precio']), 2)
+    propositoPC = int(request.form['Proposito'])
+    imagenPC = request.files['Imagen']
+    filename = secure_filename(imagenPC.filename)
+    imagenPC.save('static/uploads/' + filename)
+
+    try:
+        conn = conectar()
+        cur = conn.cursor()
+
+        cur.execute(f"INSERT INTO pc(pk_nombre, fk_id_admin, descripcion, precio, proposito, imagen_filename) VALUES('{nombrePC}', '{admin_id}', '{descripcionPC}', {precioPC}, {propositoPC}, '{filename}');")
+
+        return render_template("yourPCHome.html", admin=True)
+    except(mysql.connector.DatabaseError) as error:
+        print(error)
+        """print(nombrePC, descripcionPC, precioPC, propositoPC)"""
+        return "Error en la inserción de los datos"
+    finally:
+        if cur is not None:
+            cur.close()
+            conn.close()
 
 if __name__ == '__main__':
     app.run(debug=True)
