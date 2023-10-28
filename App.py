@@ -133,12 +133,15 @@ def uploadPC(admin_id):
         return render_template("yourPCHome.html", admin=True)
     except(mysql.connector.DatabaseError) as error:
         print(error)
-        """print(nombrePC, descripcionPC, precioPC, propositoPC)"""
         return "Error en la inserción de los datos"
     finally:
         if cur is not None:
             cur.close()
             conn.close()
+
+@app.route('/searchPCPage')
+def searchPCPage():
+    return "Página para buscar una PC LB1"
 
 if __name__ == '__main__':
     app.run(debug=True)
