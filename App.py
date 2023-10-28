@@ -141,7 +141,38 @@ def uploadPC(admin_id):
 
 @app.route('/searchPCPage')
 def searchPCPage():
-    return "Página para buscar una PC LB1"
+    return render_template('searchPC.html')
+
+@app.route('/searchPC', methods=['POST'])
+def searchPC():
+    #Obtiene el rango de precios
+    rango_precio = request.form['rango_precio']
+
+    #Crea un alista para guardar los valores que representan propósitos de las PC
+    propositos = []
+
+    #Obtiene los valores de los checkbox y los añade a la lista
+    propositos.append(request.form.get('Oficina'))
+    propositos.append(request.form.get('Programacion'))
+    propositos.append(request.form.get('Gaming'))
+    propositos.append(request.form.get('Diseño'))
+
+    #Elimina los valores nulos de la lista
+    propositos = filter(lambda item: item!=None,propositos)
+
+    #Convierte los valores de la lista en enteros
+    propositos = list(map(int, propositos))
+
+    print(rango_precio, propositos)
+
+    """try:
+        conn = conectar()
+        cur = conn.cursor()
+
+        cur.execute("SELECT FROM pc WHERE")
+    except(mysql.connector.DatabaseError) as error:
+
+    finally:"""
 
 if __name__ == '__main__':
     app.run(debug=True)
