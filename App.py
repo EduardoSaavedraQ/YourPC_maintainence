@@ -184,7 +184,7 @@ def searchPC():
         conn = conectar()
         cur = conn.cursor()
         #Prepara consula de SQL
-        sql_statement = "SELECT pk_nombre, descripcion, precio, proposito, imagen_filename FROM pc"
+        sql_statement = "SELECT pk_nombre, imagen_filename, descripcion, precio, proposito FROM pc"
         sql_precio = f"(precio {rango_precio})"
         sql_propositos = f"(proposito IN {makeTuplePorpousesForSQL(propositos)})"
         
@@ -208,12 +208,21 @@ def searchPC():
         print(sql_statement)
         cur.execute(sql_statement)
         resultados = cur.fetchall()
+        resultados = [list(tupla) for tupla in resultados]
         cantidad = len(resultados)
 
         print("La cantidad de resultados es:", cantidad)
 
+        if cantidad == 0:
+            return render_template('searchPC.html', no_results = True)
+
+        from porpousesDic import porpousesDic
+
         for r in resultados:
             print(r)
+            r[4] = porpousesDic[r[4]]
+        
+        return render_template('searchPC.html', results = resultados)
 
     except(mysql.connector.DatabaseError) as error:
         print(error)
