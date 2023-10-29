@@ -143,6 +143,23 @@ def uploadPC(admin_id):
 def searchPCPage():
     return render_template('searchPC.html')
 
+def makeTuplePorpousesForSQL(list_of_pourposes):
+    items = len(list_of_pourposes)
+    cont = 1
+    tuplestring = "("
+
+    for item in list_of_pourposes:
+
+        tuplestring += str(item)
+
+        if cont < items:
+            tuplestring += ", "
+            cont += 1
+
+    tuplestring += ")"
+
+    return tuplestring
+
 @app.route('/searchPC', methods=['POST'])
 def searchPC():
     #Obtiene el rango de precios
@@ -163,16 +180,47 @@ def searchPC():
     #Convierte los valores de la lista en enteros
     propositos = list(map(int, propositos))
 
-    print(rango_precio, propositos)
-
-    """try:
+    try:
         conn = conectar()
         cur = conn.cursor()
+        #Prepara consula de SQL
+        sql_statement = "SELECT pk_nombre, descripcion, precio, proposito, imagen_filename FROM pc"
+        sql_precio = f"(precio {rango_precio})"
+        sql_propositos = f"(proposito IN {makeTuplePorpousesForSQL(propositos)})"
+        
+        #Verifica si existen condiciones para la consulta
+        if rango_precio != "0" or len(propositos) != 0:
+            sql_statement += " WHERE "
 
-        cur.execute("SELECT FROM pc WHERE")
+            #Determina si los resultados se deben encontrar dentro de un rango de precios
+            if rango_precio != "0":
+                sql_statement += sql_precio
+
+            #Determina si hay dos condiciones a cumplir
+            if rango_precio != "0" and len(propositos) != 0:
+                sql_statement += " AND "
+
+            #Determina si los resultados deben encontrarse dentro de ciertos propósitos
+            if len(propositos) != 0:
+                sql_statement += sql_propositos
+
+        #Ejecuta la consulta y obtiene los resultados
+        print(sql_statement)
+        cur.execute(sql_statement)
+        resultados = cur.fetchall()
+        cantidad = len(resultados)
+
+        print("La cantidad de resultados es:", cantidad)
+
+        for r in resultados:
+            print(r)
+
     except(mysql.connector.DatabaseError) as error:
-
-    finally:"""
+        print(error)
+    finally:
+        if cur is not None:
+            cur.close()
+            conn.close()
 
 if __name__ == '__main__':
     app.run(debug=True)
