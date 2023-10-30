@@ -5,3 +5,8 @@ LEEME.txt
 respaldoYourPC.sql
 tests/
 Notas/
+addAdministrator.py
+requeriments.txt
+sqlInjectionPCs.py
+sqlInjectionPCslb3.py
+static/uploads
