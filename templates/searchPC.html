@@ -14,6 +14,47 @@
         .Prioridad {
             margin-bottom: 10px;
         }
+
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            text-align: justify;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
     </style>
 </head>
 <body style="background-color: purple;">
@@ -40,6 +81,18 @@
             </div>
         </div>
     </nav>
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Pulse cada uno de los propósitos según el orden de prioridad que quiera darles, siendo el primero en seleccionar el de mayor prioridad.
+                Los propósitos seleccionados aparecerán a la derecha. Para borrar las selecciones y empezar de nuevo, pulse en el botón 'Restablecer'.
+                Cuando quiera realizar la búsqueda, pulse en el botón 'Buscar'.</p>
+        </div>
+
+    </div>
     <div class="container-fluid">
         <div class="row">
             <div id="contenedor_imagen" class="col-lg-5" style="background-color: #29272A; padding-bottom: 30px;">
@@ -50,12 +103,12 @@
             </div>
             <div id="propositos_area" class="col-lg-4" style="height: 425px; background-color: white;">
                 <h1 style="position: relative; top: -10px;">Seleccione los propósitos en orden de prioridad.</h1>
-                <button style="margin-bottom: 10px;" class="Proposito btn" value="oficina">Oficina</button><br>
-                <button style="margin-bottom: 10px;" class="Proposito btn" value="programacion">Programación</button><br>
-                <button style="margin-bottom: 10px;" class="Proposito btn" value="gaming">Gaming</button><br>
-                <button style="margin-bottom: 10px;" class="Proposito btn" value="edicion">Diseño/Edición</button><br><br>
+                <button class="Proposito btn" value="oficina">Oficina</button><br>
+                <button class="Proposito btn" value="programacion">Programación</button><br>
+                <button class="Proposito btn" value="gaming">Gaming</button><br>
+                <button class="Proposito btn" value="edicion">Diseño/Edición</button><br><br>
                 
-                <div style="position: absolute; top: 370px;"><button id="Restablecer" class="btn btn-default">Restablecer</button> <button class="btn btn-success">Buscar</button> <button class="btn btn-info">Cómo funciona</button></div>
+                <div style="position: absolute; top: 370px;"><button id="Restablecer" class="btn btn-default">Restablecer</button> <button class="btn btn-success">Buscar</button> <button id="myBtn" class="btn btn-info">Cómo funciona</button></div>
                 
                 
             </div>
@@ -118,7 +171,33 @@
             //Vaciamos la lista de propósitos
             propositos = [];
             console.log(propositos);
-            
+        }
+    </script>
+    <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on the button, open the modal
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
         }
     </script>
 </body>
