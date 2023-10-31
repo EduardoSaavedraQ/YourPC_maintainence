@@ -11,7 +11,29 @@
     <script src="../static/js/yourPCHome.js"></script>
     <title>Buscar PC</title>
 </head>
-<body>
-    
+<body style="background-color: purple;">
+    <nav class="navbar navbar-inverse ">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{{url_for('yourPCHome')}}">YourPC</a>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>                        
+                </button>
+                <a class="navbar-brand" href="#" ></a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="{{url_for('yourPCHome')}}">Home</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">Hola, {{current_user.id}}</a></li>
+                    <li><a href="{{url_for('logout')}}">Cerrar sesión</a></li>
+                    <li><a href="{{url_for('yourPCHome')}}">Cancelar</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 </body>
 </html>
