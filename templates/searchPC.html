@@ -10,6 +10,11 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="../static/js/yourPCHome.js"></script>
     <title>Buscar PC</title>
+    <style>
+        .Prioridad {
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body style="background-color: purple;">
     <nav class="navbar navbar-inverse ">
@@ -37,13 +42,49 @@
     </nav>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-5" style="background-color: #29272A; padding-bottom: 30px;">
+            <div id="contenedor_imagen" class="col-lg-5" style="background-color: #29272A; padding-bottom: 30px;">
                 <div style="text-align: center;">
                     <h2 style="color: #EEE6E6; font-weight: 300;">Comienza a explorar en busca de la PC que siempre has deseado</h2>
                     <img style="width: 300px;" class="img" src="{{url_for('static',filename='explorerPC.jpeg')}}" alt="Logo YourPC">
                 </div>
             </div>
+            <div id="propositos_area" class="col-lg-4" style="height: 425px; background-color: white;">
+                <h1 style="position: relative; top: -10px;">Seleccione los propósitos en orden de prioridad.</h1>
+                <button style="margin-bottom: 10px;" style="margin-bottom: 10px;" class="Proposito btn">Oficina</button><br>
+                <button style="margin-bottom: 10px;" class="Proposito btn">Programación</button><br>
+                <button style="margin-bottom: 10px;" class="Proposito btn">Gaming</button><br>
+                <button style="margin-bottom: 10px;" class="Proposito btn">Diseño/Edición</button><br><br>
+                
+                <div style="position: absolute; top: 370px;"><button class="btn btn-default">Restablecer</button> <button class="btn btn-success">Buscar</button> <button class="btn btn-info">Cómo funciona</button></div>
+                
+                
+            </div>
+            <div id="orden_area" class="col-lg-3" style="padding-top: 50px; padding-left: 50px; height: 425px; border-left: 2px solid black; background-color: white;"></div>
         </div>
     </div>
+    <script>
+        // Obtenemos la lista de botones
+        const botones = document.querySelectorAll(".Proposito");
+
+        // Obtenemos el contenedor donde se colocarán los botones
+        const contenedor = document.getElementById("orden_area");
+
+        // Agregamos un evento de clic a cada botón
+        botones.forEach((boton) => {
+            boton.addEventListener("click", () => {
+                // Clonamos el botón y lo ocultamos
+                let boton_clon = boton.cloneNode(true);
+                boton.style.visibility = "hidden";
+
+                // Deshabilitamos el botón clon
+                boton_clon.disabled = true;
+
+                boton_clon.style.display = "block";
+
+                // Agregamos el botón clon al contenedor
+                contenedor.appendChild(boton_clon);
+            });
+        });
+    </script>
 </body>
 </html>
