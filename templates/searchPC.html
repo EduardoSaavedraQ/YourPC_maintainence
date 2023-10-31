@@ -50,10 +50,10 @@
             </div>
             <div id="propositos_area" class="col-lg-4" style="height: 425px; background-color: white;">
                 <h1 style="position: relative; top: -10px;">Seleccione los propósitos en orden de prioridad.</h1>
-                <button style="margin-bottom: 10px;" style="margin-bottom: 10px;" class="Proposito btn">Oficina</button><br>
-                <button style="margin-bottom: 10px;" class="Proposito btn">Programación</button><br>
-                <button style="margin-bottom: 10px;" class="Proposito btn">Gaming</button><br>
-                <button style="margin-bottom: 10px;" class="Proposito btn">Diseño/Edición</button><br><br>
+                <button style="margin-bottom: 10px;" class="Proposito btn" value="oficina">Oficina</button><br>
+                <button style="margin-bottom: 10px;" class="Proposito btn" value="programacion">Programación</button><br>
+                <button style="margin-bottom: 10px;" class="Proposito btn" value="gaming">Gaming</button><br>
+                <button style="margin-bottom: 10px;" class="Proposito btn" value="edicion">Diseño/Edición</button><br><br>
                 
                 <div style="position: absolute; top: 370px;"><button class="btn btn-default">Restablecer</button> <button class="btn btn-success">Buscar</button> <button class="btn btn-info">Cómo funciona</button></div>
                 
@@ -63,6 +63,8 @@
         </div>
     </div>
     <script>
+        let propositos = [];
+
         // Obtenemos la lista de botones
         const botones = document.querySelectorAll(".Proposito");
 
@@ -74,6 +76,10 @@
             boton.addEventListener("click", () => {
                 // Clonamos el botón y lo ocultamos
                 let boton_clon = boton.cloneNode(true);
+
+                propositos.push(boton.value);
+                console.log(propositos);
+
                 boton.style.visibility = "hidden";
 
                 // Deshabilitamos el botón clon
