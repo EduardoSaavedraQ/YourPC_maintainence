@@ -111,5 +111,9 @@ def logout():
     logout_user()
     return redirect(url_for('yourPCHome'))
 
+@app.route('/searchPCPage')
+def searchPCPage():
+    return render_template("searchPC.html")
+
 if __name__ == '__main__':
     app.run(debug=True)
