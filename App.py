@@ -125,7 +125,7 @@ def searchPC():
             conn = conectar()
             cur = conn.cursor()
 
-            sql_campos = "SELECT pk_nombre, descripcion, precio, oficina, programacion, gaming, edicion, imagen FROM pc "
+            sql_campos = "SELECT pk_nombre, imagen, descripcion, precio, oficina, programacion, gaming, edicion FROM pc "
 
             #Preparar consulta de SQL
             if len(data) == 0:
@@ -154,9 +154,15 @@ def searchPC():
                 print(sql_condiciones)
 
                 cur.execute(sql_campos + sql_condiciones)
+
             res = cur.fetchall()
 
+            print(len(res))
             print(res)
+
+            if len(res) > 0:
+                return jsonify(res)
+            
             
         except(mysql.connector.DatabaseError) as error:
             print(error)
@@ -165,8 +171,6 @@ def searchPC():
             if cur is not None:
                 cur.close()
                 conn.close()
-
-    return render_template("searchPC.html")
 
 if __name__ == '__main__':
     app.run(debug=True)
