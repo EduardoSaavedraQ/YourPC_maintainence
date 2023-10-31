@@ -55,7 +55,7 @@
                 <button style="margin-bottom: 10px;" class="Proposito btn" value="gaming">Gaming</button><br>
                 <button style="margin-bottom: 10px;" class="Proposito btn" value="edicion">Diseño/Edición</button><br><br>
                 
-                <div style="position: absolute; top: 370px;"><button class="btn btn-default">Restablecer</button> <button class="btn btn-success">Buscar</button> <button class="btn btn-info">Cómo funciona</button></div>
+                <div style="position: absolute; top: 370px;"><button id="Restablecer" class="btn btn-default">Restablecer</button> <button class="btn btn-success">Buscar</button> <button class="btn btn-info">Cómo funciona</button></div>
                 
                 
             </div>
@@ -63,6 +63,7 @@
         </div>
     </div>
     <script>
+        // Creamos un arreglo en donde guardaremos los propósitos conforme se vayan seleccionando
         let propositos = [];
 
         // Obtenemos la lista de botones
@@ -77,6 +78,7 @@
                 // Clonamos el botón y lo ocultamos
                 let boton_clon = boton.cloneNode(true);
 
+                //Obtenemos los valores de los botones y los guardamos en el arreglo
                 propositos.push(boton.value);
                 console.log(propositos);
 
@@ -86,11 +88,38 @@
                 boton_clon.disabled = true;
 
                 boton_clon.style.display = "block";
+                boton_clon.className = "clon";
 
                 // Agregamos el botón clon al contenedor
                 contenedor.appendChild(boton_clon);
             });
         });
+
+        //Obtenemos el botón restablecer
+        const boton_restablecer = document.getElementById("Restablecer");
+
+
+        //Definimos su comportamiento al hacer clic sobre él
+        boton_restablecer.onclick = function() {
+
+            //Obtenemos los botones clones
+            const botones_clones = document.querySelectorAll(".clon");
+
+            //Eliminamos todos los botones clones
+            botones_clones.forEach((boton) => {
+                boton.remove();
+            })
+
+            //Hacemos visibles todos los botones originales que fueron seleccionados
+            botones.forEach((boton) => {
+                boton.style.visibility = "visible";
+            })
+
+            //Vaciamos la lista de propósitos
+            propositos = [];
+            console.log(propositos);
+            
+        }
     </script>
 </body>
 </html>
