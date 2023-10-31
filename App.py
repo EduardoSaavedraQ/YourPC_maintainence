@@ -121,7 +121,51 @@ def searchPC():
     if request.method == 'POST':
         data = request.json
         print(data)
-        return jsonify(data)
+        try:
+            conn = conectar()
+            cur = conn.cursor()
+
+            sql_campos = "SELECT pk_nombre, descripcion, precio, oficina, programacion, gaming, edicion, imagen FROM pc "
+
+            #Preparar consulta de SQL
+            if len(data) == 0:
+                cur.execute(f"{sql_campos};")
+            
+            else:
+
+                sql_condiciones = "WHERE "
+
+                i = 0
+                while i < len(data) - 1:
+                    j = i + 1
+
+                    if i > 0:
+                        sql_condiciones += " AND "
+
+                    while j < len(data):
+                        sql_condiciones += f"{data[i]} >= {data[j]}"
+
+                        if j + 1 < len(data):
+                            sql_condiciones += " AND "
+                        
+                        j += 1
+                    i += 1
+                
+                print(sql_condiciones)
+
+                cur.execute(sql_campos + sql_condiciones)
+            res = cur.fetchall()
+
+            print(res)
+            
+        except(mysql.connector.DatabaseError) as error:
+            print(error)
+
+        finally:
+            if cur is not None:
+                cur.close()
+                conn.close()
+
     return render_template("searchPC.html")
 
 if __name__ == '__main__':
