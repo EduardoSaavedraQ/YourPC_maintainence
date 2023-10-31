@@ -108,13 +108,14 @@
                 <button class="Proposito btn" value="gaming">Gaming</button><br>
                 <button class="Proposito btn" value="edicion">Diseño/Edición</button><br><br>
                 
-                <div style="position: absolute; top: 370px;"><button id="Restablecer" class="btn btn-default">Restablecer</button> <button class="btn btn-success">Buscar</button> <button id="myBtn" class="btn btn-info">Cómo funciona</button></div>
+                <div style="position: absolute; top: 370px;"><button id="Restablecer" class="btn btn-default">Restablecer</button> <button id="Buscar" class="btn btn-success">Buscar</button> <button id="myBtn" class="btn btn-info">Cómo funciona</button></div>
                 
                 
             </div>
             <div id="orden_area" class="col-lg-3" style="padding-top: 50px; padding-left: 50px; height: 425px; border-left: 2px solid black; background-color: white;"></div>
         </div>
     </div>
+    <div id="data"></div>
     <script>
         // Creamos un arreglo en donde guardaremos los propósitos conforme se vayan seleccionando
         let propositos = [];
@@ -171,6 +172,26 @@
             //Vaciamos la lista de propósitos
             propositos = [];
             console.log(propositos);
+        }
+
+        const boton_buscar = document.getElementById("Buscar");
+
+        boton_buscar.onclick = function() {
+            var js_data = JSON.stringify(propositos);
+            console.log(js_data);
+
+            $.ajax({                        
+                url: '/searchPC',
+                type : 'post',
+                contentType: 'application/json',
+                dataType : 'json',
+                data : js_data
+            }).done(function(result) {
+                console.log(result);
+                $("#data").html(result);
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.log("fail: ",textStatus, errorThrown);
+            });
         }
     </script>
     <script>

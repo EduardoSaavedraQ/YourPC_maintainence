@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect, jsonify
 from flask_login import LoginManager, UserMixin, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
@@ -113,6 +113,15 @@ def logout():
 
 @app.route('/searchPCPage')
 def searchPCPage():
+    return render_template("searchPC.html")
+
+
+@app.route('/searchPC', methods=['POST'])
+def searchPC():
+    if request.method == 'POST':
+        data = request.json
+        print(data)
+        return jsonify(data)
     return render_template("searchPC.html")
 
 if __name__ == '__main__':
