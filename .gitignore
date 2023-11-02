@@ -1,5 +1,4 @@
 __pycache__/
-config.py
 yourpc.ini
 LEEME.txt
 respaldoYourPC.sql
@@ -10,4 +9,3 @@ requeriments.txt
 sqlInjectionPCs.py
 sqlInjectionPCslb3.py
 static/uploads
-yourpclb3.ini
