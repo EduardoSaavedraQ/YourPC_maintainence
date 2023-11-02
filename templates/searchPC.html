@@ -118,9 +118,11 @@
             </div>
             <div id="orden_area" class="col-lg-3" style="padding-top: 50px; padding-left: 50px; height: 425px; border-left: 2px solid black; background-color: white;"></div>
         </div>
+    </div>
+    <div class="container">
         <div class="row">   
             <h2 style="font-weight: 300; text-align: center;">Puede ver los resultados aquí:</h2>
-            <table id="Tabla_resultados" class="table-responsive table-hover" style="display: none; height: 593px; overflow-y: scroll; margin-left: auto; margin-right: auto;">
+            <table id="Tabla_resultados" class="table table-hover" style="display: none; height: 625px; overflow-y: scroll; margin: 0 auto;">
                 <thead style="position: sticky; top: 0; background-color: #EEE6E6;">
                     <th>Nombre PC</th>
                     <th>Imagen</th>
@@ -135,7 +137,8 @@
 
                 </tbody>
             </table>
-            
+        </div>
+    </div>
     <script>
         // Creamos un arreglo en donde guardaremos los propósitos conforme se vayan seleccionando
         let propositos = [];
@@ -177,9 +180,8 @@
         function eliminarResultadosTabla() {
             var tbody = document.getElementById("Resultados");
 
-            for (let i = 0; i < tbody.childNodes.length; i++) {
-                // Eliminamos cada hijo
-                tbody.removeChild(tbody.childNodes[i]);
+            while(tbody.childNodes.length > 0) {
+                tbody.removeChild(tbody.childNodes[0]);
             }
 
             document.getElementById("Tabla_resultados").style.display = "none";
@@ -221,8 +223,9 @@
 
                     if(i == 1) {
                         var img = document.createElement("img");
-                        img.src = "../static/" + res[i];
+                        img.src = "../static/uploads/" + res[i];
                         img.alt = "Imagen de PC";
+                        img.height = 100;
                         
                         td.appendChild(img);
                     }

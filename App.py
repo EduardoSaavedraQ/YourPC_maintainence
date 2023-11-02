@@ -150,15 +150,14 @@ def searchPC():
                         
                         j += 1
                     i += 1
-                
-                print(sql_condiciones)
+                print(sql_campos + sql_condiciones)
 
                 cur.execute(sql_campos + sql_condiciones)
 
             res = cur.fetchall()
 
             print(len(res))
-            print(res)
+            #print(res)
 
             if len(res) > 0:
                 return jsonify(res)
