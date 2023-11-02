@@ -120,8 +120,8 @@
         </div>
         <div class="row">   
             <h2 style="font-weight: 300; text-align: center;">Puede ver los resultados aquí:</h2>
-            <table id="Tabla_resultados" class="table-responsive table-hover" style="display: none;">
-                <thead>
+            <table id="Tabla_resultados" class="table-responsive table-hover" style="display: none; height: 593px; overflow-y: scroll; margin-left: auto; margin-right: auto;">
+                <thead style="position: sticky; top: 0; background-color: #EEE6E6;">
                     <th>Nombre PC</th>
                     <th>Imagen</th>
                     <th>Descripción</th>
@@ -131,52 +131,11 @@
                     <th style="padding-right: 10px;">Gaming</th>
                     <th style="padding-right: 10px;">Diseño/Edición</th>
                 </thead>
-                <tbody id="Resultados">
+                <tbody id="Resultados" style="background-color: gray;">
 
                 </tbody>
             </table>
             
-
-                {% if no_results %}
-                <div class="alert alert-danger" role="alert">
-                    Lo sentimos. Actualmente no existen resultados para su consulta.
-                </div>
-                {% endif %}
-
-                {% if results %}
-                    <div class="table-responsive" action="searchPC">
-                        <table class="table-hover" style="height: 593px; overflow-x: scroll; overflow-y: scroll; display: block;">
-                            <thead style="position: sticky; top: 0; background-color: #EEE6E6;">
-                                <tr>
-                                    <th>Nombre PC</th>
-                                    <th>Imagen</th>
-                                    <th>Descripción</th>
-                                    <th>Precio</th>
-                                    <th style="padding-right: 10px;">Oficina</th>
-                                    <th style="padding-right: 10px;">Programación</th>
-                                    <th style="padding-right: 10px;">Gaming</th>
-                                    <th style="padding-right: 10px;">Diseño/Edición</th>
-                                </tr>
-                            </thead>
-                            <tbody style="background-color: gray;">
-                                {% for r in results %}
-                                <tr>
-                                    <td>{{r[0]}}</td>
-                                    <td><img src="../static/uploads/{{r[1]}}" style="width: 100px;" alt="Imagen de PC"></td>
-                                    <td>{{r[2]}}</td>
-                                    <td>{{r[3]}}</td>
-                                    <td>{{r[4]}}</td>
-                                    <td>{{r[5]}}</td>
-                                    <td>{{r[6]}}</td>
-                                    <td>{{r[7]}}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                {% endif %}
-        </div>
-    </div>
     <script>
         // Creamos un arreglo en donde guardaremos los propósitos conforme se vayan seleccionando
         let propositos = [];
@@ -213,6 +172,19 @@
         //Obtenemos el botón restablecer
         const boton_restablecer = document.getElementById("Restablecer");
 
+        const boton_buscar = document.getElementById("Buscar");
+
+        function eliminarResultadosTabla() {
+            var tbody = document.getElementById("Resultados");
+
+            for (let i = 0; i < tbody.childNodes.length; i++) {
+                // Eliminamos cada hijo
+                tbody.removeChild(tbody.childNodes[i]);
+            }
+
+            document.getElementById("Tabla_resultados").style.display = "none";
+        }
+
 
         //Definimos su comportamiento al hacer clic sobre él
         boton_restablecer.onclick = function() {
@@ -233,6 +205,9 @@
             //Vaciamos la lista de propósitos
             propositos = [];
             console.log(propositos);
+
+            eliminarResultadosTabla();
+            boton_buscar.disabled = false;
         }
 
         function mostrarTablaResultados(results) {
@@ -264,9 +239,9 @@
             document.getElementById("Tabla_resultados").style.display = "block";
         }
 
-        const boton_buscar = document.getElementById("Buscar");
-
         boton_buscar.onclick = function() {
+            boton_buscar.disabled = true;
+
             var js_data = JSON.stringify(propositos);
             console.log(js_data);
 
