@@ -81,8 +81,8 @@
             </div>
         </div>
     </nav>
-    <!-- The Modal -->
-    <div id="myModal" class="modal">
+    <!-- The Modals -->
+    <div id="infoModal" class="modal">
 
         <!-- Modal content -->
         <div class="modal-content">
@@ -90,6 +90,18 @@
             <p>Pulse cada uno de los propósitos según el orden de prioridad que quiera darles, siendo el primero en seleccionar el de mayor prioridad.
                 Los propósitos seleccionados aparecerán a la derecha. Para borrar las selecciones y empezar de nuevo, pulse en el botón 'Restablecer'.
                 Cuando quiera realizar la búsqueda, pulse en el botón 'Buscar'.</p>
+        </div>
+
+    </div>
+    <div id="advertenciaModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>
+                Para poder obtener resultados, debe seleccionar <span style="color: red">más de un propósito</span> o, por el contrario, no escoger
+                <span style="color: red">ningún propósito</span> para visualizar la lista completa de PCs.
+            </p>
         </div>
 
     </div>
@@ -149,11 +161,56 @@
         // Obtenemos el contenedor donde se colocarán los botones
         const contenedor = document.getElementById("orden_area");
 
+        //Obtenemos el botón restablecer
+        const boton_restablecer = document.getElementById("Restablecer");
+
+        //Obtenemos el botón para buscar PCs
+        const boton_buscar = document.getElementById("Buscar");
+
+        // Obtenemos el modal de información
+        const infoModal = document.getElementById("infoModal");
+
+        // Obtenemos el modal de advertencia
+        const advertenciaModal = document.getElementById("advertenciaModal");
+
+        // Obtenemos el botón que abre el modal de información
+        const botonInfo = document.getElementById("myBtn");
+
+        // Obtenemos el elemento <span> que cierra el modal de información
+        const spanInfoModal = document.getElementsByClassName("close")[0];
+        
+        // Obtenemos el elemento <span> que cierra el modal de advertencia
+        const spanModalAdvertencia = document.getElementsByClassName("close")[1];
+
+        // Cuando el usuario hace clic en el botón de información, abre el modal de información
+        botonInfo.onclick = function() {
+            infoModal.style.display = "block";
+        }
+
+        // Cuando el usuario hace clic en <span> (x), cierra los modales
+        spanInfoModal.onclick = function() {
+            infoModal.style.display = "none";
+        }
+
+        spanModalAdvertencia.onclick = function() {
+            advertenciaModal.style.display = "none";
+        }
+
+        // Cuando el usuario hace clic en cualquier lugar de la pantalla fuera de los modales, cierra los modales
+        window.onclick = function(event) {
+            if (event.target == infoModal) {
+                infoModal.style.display = "none";
+            }
+            if(event.target == advertenciaModal) {
+                advertenciaModal.style.display = "none";
+            }
+        }
+
         // Agregamos un evento de clic a cada botón
         botones.forEach((boton) => {
             boton.addEventListener("click", () => {
                 // Clonamos el botón y lo ocultamos
-                let boton_clon = boton.cloneNode(true);
+                const boton_clon = boton.cloneNode(true);
 
                 //Obtenemos los valores de los botones y los guardamos en el arreglo
                 propositos.push(boton.value);
@@ -172,46 +229,34 @@
             });
         });
 
-        //Obtenemos el botón restablecer
-        const boton_restablecer = document.getElementById("Restablecer");
-
-        const boton_buscar = document.getElementById("Buscar");
-
-        function eliminarResultadosTabla() {
-            var tbody = document.getElementById("Resultados");
-
-            while(tbody.childNodes.length > 0) {
-                tbody.removeChild(tbody.childNodes[0]);
+        //Definimos el comportamiento del botón buscar al hacer clic sobre éste
+        boton_buscar.onclick = function() {
+            if(propositos.length == 1) {
+                advertenciaModal.style.display = "block";
+                return;
             }
 
-            document.getElementById("Tabla_resultados").style.display = "none";
+            boton_buscar.disabled = true;
+
+            var js_data = JSON.stringify(propositos);
+            console.log(js_data);
+
+            $.ajax({                        
+                url: '/searchPC',
+                type : 'post',
+                contentType: 'application/json',
+                dataType : 'json',
+                data : js_data
+            }).done(function(result) {
+                mostrarTablaResultados(result);
+                console.log(result);
+                $("#data").html(result);
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.log("fail: ",textStatus, errorThrown);
+            });
         }
 
-
-        //Definimos su comportamiento al hacer clic sobre él
-        boton_restablecer.onclick = function() {
-
-            //Obtenemos los botones clones
-            const botones_clones = document.querySelectorAll(".clon");
-
-            //Eliminamos todos los botones clones
-            botones_clones.forEach((boton) => {
-                boton.remove();
-            });
-
-            //Hacemos visibles todos los botones originales que fueron seleccionados
-            botones.forEach((boton) => {
-                boton.style.visibility = "visible";
-            });
-
-            //Vaciamos la lista de propósitos
-            propositos = [];
-            console.log(propositos);
-
-            eliminarResultadosTabla();
-            boton_buscar.disabled = false;
-        }
-
+        //Mostramos la tabla con los resultados obtenidos luego de la consulta a la BD
         function mostrarTablaResultados(results) {
             var tbody = document.getElementById("Resultados");
 
@@ -241,53 +286,42 @@
 
             document.getElementById("Tabla_resultados").style.display = "block";
         }
+        
+        //Función que elimina la tabla de resultados creada
+        function eliminarResultadosTabla() {
+            var tbody = document.getElementById("Resultados");
 
-        boton_buscar.onclick = function() {
-            boton_buscar.disabled = true;
-
-            var js_data = JSON.stringify(propositos);
-            console.log(js_data);
-
-            $.ajax({                        
-                url: '/searchPC',
-                type : 'post',
-                contentType: 'application/json',
-                dataType : 'json',
-                data : js_data
-            }).done(function(result) {
-                mostrarTablaResultados(result);
-                console.log(result);
-                $("#data").html(result);
-            }).fail(function(jqXHR, textStatus, errorThrown) {
-                console.log("fail: ",textStatus, errorThrown);
-            });
-        }
-    </script>
-    <script>
-        // Get the modal
-        var modal = document.getElementById("myModal");
-
-        // Get the button that opens the modal
-        var btn = document.getElementById("myBtn");
-
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close")[0];
-
-        // When the user clicks on the button, open the modal
-        btn.onclick = function() {
-            modal.style.display = "block";
-        }
-
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function() {
-            modal.style.display = "none";
-        }
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
+            while(tbody.childNodes.length > 0) {
+                tbody.removeChild(tbody.childNodes[0]);
             }
+
+            document.getElementById("Tabla_resultados").style.display = "none";
+        }
+
+        //Definimos el comportamiento del botón restablecer al hacer clic sobre éste
+        boton_restablecer.onclick = function() {
+
+            //Obtenemos los botones clones
+            const botones_clones = document.querySelectorAll(".clon");
+
+            //Eliminamos todos los botones clones
+            botones_clones.forEach((boton) => {
+                boton.remove();
+            });
+
+            //Hacemos visibles todos los botones originales que fueron seleccionados
+            botones.forEach((boton) => {
+                boton.style.visibility = "visible";
+            });
+
+            //Vaciamos la lista de propósitos
+            propositos = [];
+            console.log(propositos);
+
+
+            //Eliminamos la tabla creada
+            eliminarResultadosTabla();
+            boton_buscar.disabled = false;
         }
     </script>
 </body>
