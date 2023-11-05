@@ -101,20 +101,20 @@
         <!-- Modal content -->
         <div class="modal-content">
             <span class="close">&times;</span>
-            <p>
+            <p style="text-align: center;">
                 Para poder obtener resultados, debe seleccionar <span style="color: red">más de un propósito</span> o, por el contrario, no escoger
                 <span style="color: red">ningún propósito</span> para visualizar la lista completa de PCs.
             </p>
         </div>
 
     </div>
-    <div id="sinResultadosModal" class="modal">
+    <div id="avisoSinResultadosModal" class="modal">
 
         <!-- Modal content -->
         <div class="modal-content">
             <span class="close">&times;</span>
-            <p>
-                Lo sentimmos. Actualmente no hay ningún resultado para sus criterios de búsqueda.
+            <p style="text-align: center;">
+                Lo sentimos. En este momento no contamos con resultados para su criterio de búsqueda.
             </p>
         </div>
 
@@ -187,8 +187,8 @@
         // Obtenemos el modal de advertencia
         const advertenciaModal = document.getElementById("advertenciaModal");
 
-        //Obtenemos el modal de aviso de búsqueda fallida
-        const sinResultadosModal = document.getElementById("sinResultadosModal");
+        // Obtenemos el modal de aviso de no resultados
+        const avisoSinResultadosModal = document.getElementById("avisoSinResultadosModal");
 
         // Obtenemos el botón que abre el modal de información
         const botonInfo = document.getElementById("botonInfo");
@@ -198,9 +198,9 @@
         
         // Obtenemos el elemento <span> que cierra el modal de advertencia
         const spanModalAdvertencia = document.getElementsByClassName("close")[1];
-
-        // Obtenemos el elemento <span> que cierra el modal de advertencia
-        const spanModalSinResultados = document.getElementsByClassName("close")[2];
+        
+        // Obtenemos el elemento <span> que cierra el modal de aviso de no resultados de búsqueda
+        const spanModalAvisoSinResultados = document.getElementsByClassName("close")[2];
 
         // Cuando el usuario hace clic en el botón de información, abre el modal de información
         botonInfo.onclick = function() {
@@ -216,8 +216,8 @@
             advertenciaModal.style.display = "none";
         }
 
-        spanModalSinResultados.onclick = function() {
-            advertenciaModal.style.display = "none";
+        spanModalAvisoSinResultados.onclick = function() {
+            avisoSinResultadosModal.style.display = "none";
         }
 
         // Cuando el usuario hace clic en cualquier lugar de la pantalla fuera de los modales, cierra los modales
@@ -227,6 +227,9 @@
             }
             if(event.target == advertenciaModal) {
                 advertenciaModal.style.display = "none";
+            }
+            if(event.target == avisoSinResultadosModal) {
+                avisoSinResultadosModal.style.display = "none";
             }
         }
 
@@ -276,6 +279,7 @@
                 console.log(result);
                 $("#data").html(result);
             }).fail(function(jqXHR, textStatus, errorThrown) {
+                avisoSinResultadosModal.style.display = "block";
                 console.log("fail: ",textStatus, errorThrown);
             });
         }
