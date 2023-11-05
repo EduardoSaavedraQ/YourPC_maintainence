@@ -108,6 +108,17 @@
         </div>
 
     </div>
+    <div id="sinResultadosModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>
+                Lo sentimmos. Actualmente no hay ningún resultado para sus criterios de búsqueda.
+            </p>
+        </div>
+
+    </div>
     <div class="container-fluid">
         <div class="row">
             <div id="contenedor_imagen" class="col-lg-5" style="background-color: #29272A; padding-bottom: 30px;">
@@ -176,6 +187,9 @@
         // Obtenemos el modal de advertencia
         const advertenciaModal = document.getElementById("advertenciaModal");
 
+        //Obtenemos el modal de aviso de búsqueda fallida
+        const sinResultadosModal = document.getElementById("sinResultadosModal");
+
         // Obtenemos el botón que abre el modal de información
         const botonInfo = document.getElementById("botonInfo");
 
@@ -184,6 +198,9 @@
         
         // Obtenemos el elemento <span> que cierra el modal de advertencia
         const spanModalAdvertencia = document.getElementsByClassName("close")[1];
+
+        // Obtenemos el elemento <span> que cierra el modal de advertencia
+        const spanModalSinResultados = document.getElementsByClassName("close")[2];
 
         // Cuando el usuario hace clic en el botón de información, abre el modal de información
         botonInfo.onclick = function() {
@@ -196,6 +213,10 @@
         }
 
         spanModalAdvertencia.onclick = function() {
+            advertenciaModal.style.display = "none";
+        }
+
+        spanModalSinResultados.onclick = function() {
             advertenciaModal.style.display = "none";
         }
 
@@ -261,6 +282,11 @@
 
         //Mostramos la tabla con los resultados obtenidos luego de la consulta a la BD
         function mostrarTablaResultados(results) {
+            if(results.length == 0) {
+                sinResultadosModa.style.display == "block";
+                return;
+            }
+
             var tbody = document.getElementById("Resultados");
 
             results.forEach((res) => {

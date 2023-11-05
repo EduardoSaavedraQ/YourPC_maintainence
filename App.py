@@ -158,9 +158,8 @@ def searchPC():
 
             print(len(res))
             #print(res)
-
-            if len(res) > 0:
-                return jsonify(res)
+                
+            return jsonify(res)
             
             
         except(mysql.connector.DatabaseError) as error:
