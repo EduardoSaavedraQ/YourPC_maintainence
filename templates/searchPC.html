@@ -87,9 +87,12 @@
         <!-- Modal content -->
         <div class="modal-content">
             <span class="close">&times;</span>
-            <p>Pulse cada uno de los propósitos según el orden de prioridad que quiera darles, siendo el primero en seleccionar el de mayor prioridad.
+            <p>
+                Pulse cada uno de los propósitos según el orden de prioridad que quiera darles, siendo el primero en seleccionar el de mayor prioridad.
                 Los propósitos seleccionados aparecerán a la derecha. Para borrar las selecciones y empezar de nuevo, pulse en el botón 'Restablecer'.
-                Cuando quiera realizar la búsqueda, pulse en el botón 'Buscar'.</p>
+                Cuando quiera realizar la búsqueda, pulse en el botón 'Buscar'. Tome en cuenta que debe escoger más de un propósito para obtener resultados
+                o, de lo contrario, no elegir ninguno para ver la lista completa de PCs disponibles.
+            </p>
         </div>
 
     </div>
@@ -124,7 +127,7 @@
                 <div style="position: absolute; top: 370px;">
                     <button id="Restablecer" class="btn btn-default">Restablecer</button>
                     <button id="Buscar" type="submit" class="btn btn-success">Buscar</button>
-                    <button id="myBtn" class="btn btn-info">Cómo funciona</button>
+                    <button id="botonInfo" class="btn btn-info">Cómo funciona</button>
                 </div>
                 
             </div>
@@ -174,7 +177,7 @@
         const advertenciaModal = document.getElementById("advertenciaModal");
 
         // Obtenemos el botón que abre el modal de información
-        const botonInfo = document.getElementById("myBtn");
+        const botonInfo = document.getElementById("botonInfo");
 
         // Obtenemos el elemento <span> que cierra el modal de información
         const spanInfoModal = document.getElementsByClassName("close")[0];
