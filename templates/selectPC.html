@@ -49,21 +49,24 @@
 	</p>
 
 	<div class="container">
-		<h1>Escriba el nombre de la PC</h1>
-		<input type="text" id="search" placeholder="Nombre de la PC" oninput="getPCMatches()">
+		<h1>Escriba el nombre de la PC y seleccione para modificar</h1>
+		<input type="text" id="search" placeholder="Nombre de la PC" oninput="getPCMatches()" style="margin-bottom: 10px;">
 
-		<table class="table table-hover">
-			<thead>
-				<th>Nombre PC</th>
-				<th>Imagen</th>
-				<th>Descripción</th>
-				<th>Precio</th>
-				<th>Propósito</th>
-			</thead>
-
-			<!-- Las filas de la tabla se generarán automáticamene -->
-			<tbody id="resultsBodyTable"></tbody>
-		</table>
+		<div style="max-height: 600px; overflow-y: auto; margin: 0 auto;">
+			<table class="table table-hover" >
+				<thead style="position: sticky; top: 0; background-color: #EEE6E6;">
+					<th style="width: 300px;">Nombre PC</th>
+					<th style="width: 100px;">Imagen</th>
+					<th style="width: 450px;">Descripción</th>
+					<th>Precio</th>
+					<th>Propósito</th>
+				</thead>
+	
+				<!-- Las filas de la tabla se generarán automáticamene -->
+				<tbody id="resultsBodyTable"></tbody>
+			</table>
+		</div>
+		
 
 	</div>
 	<script>
@@ -132,7 +135,10 @@
 
 						td.appendChild(img);
 					} else {
-						td.textContent = element[i];
+						if(i === 3)
+							td.textContent = '$' + element[i];
+						else
+							td.textContent = element[i];
 					}
 
 					tr.appendChild(td);
