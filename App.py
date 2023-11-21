@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, request, redirect, make_response
-from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
+from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import mysql.connector
@@ -9,6 +9,7 @@ app = Flask(__name__)
 app.secret_key = 'una clave secreta muy segura'
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_view = 'logIn'
 
 class User(UserMixin):
     def __init__(self, id, is_admin=False):
@@ -25,10 +26,11 @@ def load_user(user_id):
 def yourPCHome(admin=None):
     admin_value = admin if admin is not None else False
 
-    response = make_response(render_template("yourPCHome.html", admin=bool(admin_value)))
+    response = make_response(render_template("yourPCHome.html", admin=admin_value))
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
+
     return response
 
 @app.route('/signUp')
@@ -43,13 +45,39 @@ def logIn():
 def startPage():
     return render_template("startPage.html",url_for=url_for)
 
+@app.route('/addPCPage/<int:admin>')
 @app.route('/addPCPage')
+@login_required
 def addPCPage():
-    return render_template("addPC.html", url_for=url_for)
+    response = make_response(render_template("addPC.html"))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+
+    return response
+
+@app.route('/searchPCPage/<int:admin>')
+@app.route('/searchPCPage')
+@login_required
+def searchPCPage(admin=None):
+    admin_value = admin if admin is not None else False
+
+    response = make_response(render_template('searchPC.html', admin=admin_value))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    
+    return response
 
 @app.route('/createAdminUser')
+@login_required
 def createAdminUserPage():
-    return render_template("createAdminUser.html", url_for=url_for)
+    response = make_response(render_template("createAdminUser.html", url_for=url_for))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+
+    return response
 
 @app.route('/SignUp', methods=['POST'])
 def SignUp():
@@ -119,7 +147,7 @@ def LogIn():
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('yourPCHome'))
+    return redirect('/')
 
 @app.route('/uploadPC/<string:admin_id>', methods=['POST'])
 def uploadPC(admin_id):
@@ -145,10 +173,6 @@ def uploadPC(admin_id):
         if cur is not None:
             cur.close()
             conn.close()
-
-@app.route('/searchPCPage')
-def searchPCPage():
-    return render_template('searchPC.html')
 
 def makeTuplePorpousesForSQL(list_of_pourposes):
     items = len(list_of_pourposes)
