@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect, make_response
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -20,10 +20,16 @@ def load_user(user_id):
     return User(user_id)
 
 
-
+@app.route('/<int:admin>/')
 @app.route('/')
-def yourPCHome():
-    return render_template("yourPCHome.html")
+def yourPCHome(admin=None):
+    admin_value = admin if admin is not None else False
+
+    response = make_response(render_template("yourPCHome.html", admin=bool(admin_value)))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 @app.route('/signUp')
 def signUp():
@@ -99,7 +105,8 @@ def LogIn():
         id = res[0]
         user = User(id, bool(res[3]))
         login_user(user)
-        return render_template("yourPCHome.html")
+        
+        return redirect(url_for('yourPCHome', admin=res[3]))
 
     except(mysql.connector.Error) as error:
         print(error)
