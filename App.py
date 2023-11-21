@@ -12,9 +12,8 @@ login_manager.init_app(app)
 login_manager.login_view = 'logIn'
 
 class User(UserMixin):
-    def __init__(self, id, is_admin=False):
+    def __init__(self, id):
         self.id = id
-        self.is_admin = is_admin
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -115,6 +114,42 @@ def SignUp():
             cur.close()
             conn.close()
 
+@app.route('/addNewAdmin', methods=['POST'])
+@login_required
+def addNewAdmin():
+
+    user_id = request.form['nombre']
+    email = request.form['correo']
+    pwd = request.form['pwd']
+    length_pwd = len(pwd)
+
+    #Comprueba la longitud de la contraseña
+    if length_pwd < 5 or len(pwd) > 15:
+        return render_template("signUp.html", error_pwd=True)
+    # Verifica si el usuario o el correo ya existen en la base de datos
+    try:
+        conn = conectar()
+        cur = conn.cursor()
+
+        cur.execute("SELECT pk_nickname, correo FROM usuarios WHERE UPPER(pk_nickname) = %s OR UPPER(correo) = %s;", (user_id.upper(), email.upper()))
+
+        res = cur.fetchone()
+
+        if res is None:
+            hashed_pwd = generate_password_hash(pwd) #Default method="pbkdf2:sha1", alternativa method="pbkdf2:sha512"
+            cur.execute(f"INSERT INTO usuarios(pk_nickname, correo, contrasenia, admin) VALUES('{user_id}', '{email}', '{hashed_pwd}', 1);")
+            
+            return redirect(url_for('yourPCHome', admin=1))
+
+        return render_template("createAdminUser.html", repited_account=True)
+    except(mysql.connector.Error) as error:
+        print(error)
+
+    finally:
+        if cur is not None:
+            cur.close()
+            conn.close()
+
 @app.route("/LogIn", methods=['POST'])
 def LogIn():
     correo = request.form['email']
@@ -131,7 +166,7 @@ def LogIn():
             return render_template("logIn.html", error=True)
 
         id = res[0]
-        user = User(id, bool(res[3]))
+        user = User(id)
         login_user(user)
         
         return redirect(url_for('yourPCHome', admin=res[3]))
@@ -150,6 +185,7 @@ def logout():
     return redirect('/')
 
 @app.route('/uploadPC/<string:admin_id>', methods=['POST'])
+@login_required
 def uploadPC(admin_id):
     nombrePC = request.form['Nombre']
     descripcionPC = request.form['Descripcion']
@@ -165,7 +201,7 @@ def uploadPC(admin_id):
 
         cur.execute(f"INSERT INTO pc(pk_nombre, fk_id_admin, descripcion, precio, proposito, imagen_filename) VALUES('{nombrePC}', '{admin_id}', '{descripcionPC}', {precioPC}, {propositoPC}, '{filename}');")
 
-        return render_template("yourPCHome.html", admin=True)
+        return redirect(url_for("yourPCHome.html", admin=1))
     except(mysql.connector.DatabaseError) as error:
         print(error)
         return "Error en la inserción de los datos"
