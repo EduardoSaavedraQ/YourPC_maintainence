@@ -3,3 +3,8 @@ yourpc.ini
 LEEME.txt
 respaldoYourPC.sql
 tests/
+Notas/
+addAdministrator.py
+requeriments.txt
+uploads/
+sqlInjectionPCs.py

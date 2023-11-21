@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 
-def config(archivo="yourpc.ini", seccion="postgresql"):
+def config(archivo="./yourpc.ini", seccion="mysql"):
     parser = ConfigParser()
     parser.read(archivo)
 

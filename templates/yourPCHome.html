@@ -27,8 +27,21 @@
             <ul class="nav navbar-nav navbar-right">
             {% if current_user.is_authenticated %}
               <li><a href="#">Hola, {{current_user.id}}</a></li>
+              {% if current_user.is_admin or admin%}
+              <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Operaciones de administrador
+                <span class="caret"></span></a>
+                <ul class="dropdown-menu" >
+                  <li><a href="{{url_for('addPCPage')}}">Registrar PC</a></li>
+                  <li><a href="#">Modificar PC</a></li>
+                  <li><a href="#">Eliminar PC</a></li>
+                  <li><a href="{{url_for('createAdminUserPage')}}">Agregar nuevo administrador</a></li>
+                </ul>
+              </li>
+              {% endif %}
+              <li><a href="{{url_for('searchPCPage')}}">Buscar PC</a></li>
               <li><a href="#">Libreta</a></li>
-              <li><a href="\logout">Cerrar sesión</a></li>
+              <li><a href="{{url_for('logout')}}">Cerrar sesión</a></li>
             {% else %}
               <li><a href="{{ url_for('logIn') }}"><span class="glyphicon glyphicon-log-in"></span> Acceder</a></li>
               <li><a href="{{ url_for('signUp') }}"><span class="glyphicon glyphicon-user"></span> Crear cuenta</a></li>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/styles/yourPCHome.css">
+    <link rel="icon" type="image/x-icon" href="../static/YourPCLogo2.jpg">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title>Registrar PC</title>
+</head>
+<body>
+    <nav class="navbar navbar-inverse ">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{{url_for('yourPCHome')}}">YourPC</a>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>                        
+                </button>
+                <a class="navbar-brand" href="#" ></a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="{{url_for('yourPCHome')}}">Home</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Operaciones de administrador
+                        <span class="caret"></span></a>
+                        <ul class="dropdown-menu" >
+                            <li><a href="{{url_for('addPCPage')}}">Registrar PC</a></li>
+                            <li><a href="#">Modificar PC</a></li>
+                            <li><a href="#">Eliminar PC</a></li>
+                            <li><a href="{{url_for('createAdminUserPage')}}">Agregar nuevo administrador</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">Hola, {{current_user.id}}</a></li>
+                    <li><a href="{{url_for('logout')}}">Cerrar sesión</a></li>
+                    <li><a href="{{url_for('yourPCHome')}}">Cancelar</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <p>
+        <img class="img-responsive" src="{{url_for('static',filename='YourPCLogo1.jpg')}}" style="height: 300px; display: block; margin: 0 auto;">
+    </p>
+    <div class="container">
+        <form class="form-horizontal" method="POST" enctype="multipart/form-data" action="/uploadPC/{{current_user.id}}">
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default">Añadir PC</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="Nombre">Nombre de la PC:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="Nombre" placeholder="Ingrese el nombre de la PC" name="Nombre" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="Precio">Precio $:</label>
+                <div class="col-sm-10">
+                    <input type="number" step="0.01" min="0" class="form-control" id="Precio" placeholder="Ingrese el precio de la PC" name="Precio" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="Precio">Imagen:</label>
+                <div class="col-sm-10">
+                    <input type="file" class="form-control-file" id="Imagen" placeholder="Inserte una imagen de la PC" name="Imagen" onchange="previewImage()">
+                    <img class="img-responsive" id="imgPreview" src="" alt="Imagen">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Proposito">Seleccione el propósito de la PC:</label>
+                <select class="form-control" id="Proposito" name="Proposito">
+                    <option value="1">Oficina</option>
+                    <option value="2">Programación</option>
+                    <option value="3">Gaming</option>
+                    <option value="4">Diseño/Edición</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="Descripcion">Descripción:</label>
+                <textarea class="form-control" rows="5" id="Descripcion" name="Descripcion" placeholder="Añada una descripción de la PC" required></textarea>
+            </div>
+        </form>
+    </div>
+    <script>
+        function previewImage() {
+            const image = document.getElementById("Imagen").files[0];
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                const imgPreview = document.getElementById("imgPreview");
+                imgPreview.src = e.target.result;
+            };
+
+            reader.readAsDataURL(image);
+        }
+
+        // Obtener la imagen seleccionada
+        const image = document.querySelector("#Imagen");
+
+        // Cuando se cambia la imagen, ejecutar la función
+        image.addEventListener("change", () => {
+        // Obtener la imagen del input
+        const selectedImage = image.files[0];
+
+        // Hacer algo con la imagen
+        console.log(selectedImage);
+        });
+    </script>
+</body>
+</html>
