@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../static/styles/yourPCHome.css">
+	<link rel="icon" type="image/x-icon" href="../static/YourPCLogo2.jpg">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<title>Seleccionar PC</title>
+</head>
+<body>
+	<nav class="navbar navbar-inverse ">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="{{url_for('yourPCHome', admin=1)}}">YourPC</a>
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>                        
+				</button>
+				<a class="navbar-brand" href="#" ></a>
+			</div>
+			<div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="{{url_for('yourPCHome', admin=1)}}">Home</a></li>
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">Operaciones de administrador
+						<span class="caret"></span></a>
+						<ul class="dropdown-menu" >
+							<li><a href="{{url_for('addPCPage')}}">Registrar PC</a></li>
+							<li><a href="#">Modificar PC</a></li>
+							<li><a href="#">Eliminar PC</a></li>
+							<li><a href="{{url_for('createAdminUserPage')}}">Agregar nuevo administrador</a></li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#">Hola, {{current_user.id}}</a></li>
+					<li><a href="{{url_for('logout')}}">Cerrar sesión</a></li>
+					<li><a href="{{url_for('yourPCHome', admin=1)}}">Cancelar</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<p>
+		<img class="img-responsive" src="{{url_for('static',filename='YourPCLogo1.jpg')}}" style="height: 300px; display: block; margin: 0 auto;">
+	</p>
+
+	<div class="container">
+		<h1>Escriba el nombre de la PC</h1>
+		<input type="text" id="search" placeholder="Nombre de la PC" oninput="getPCMatches()">
+
+		<table class="table table-hover">
+			<thead>
+				<th>Nombre PC</th>
+				<th>Imagen</th>
+				<th>Descripción</th>
+				<th>Precio</th>
+				<th>Propósito</th>
+			</thead>
+
+			<!-- Las filas de la tabla se generarán automáticamene -->
+			<tbody id="resultsBodyTable"></tbody>
+		</table>
+
+	</div>
+	<script>
+
+		function doSomthing() {
+				window.location.href="{{url_for('yourPCHome', admin=1)}}"
+		}
+
+		function emptyTable() {
+			const tbody = document.getElementById('resultsBodyTable');
+
+			while(tbody.childNodes.length > 0) {
+					tbody.removeChild(tbody.childNodes[0]);
+			}
+		}
+
+		async function getPCMatches() {
+			const input = document.getElementById('search').value;
+
+			try {
+				const response = await fetch('{{url_for("getPCMatches")}}', {
+					method: 'POST',
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						input: input
+					})
+				});
+
+				if(!response.ok)
+					throw new Error(`HTTP error! Status: ${response.status}`);
+
+				const json = await response.json();
+
+				json.forEach(element => {
+					console.log(element);
+				});
+
+				emptyTable();
+				makeTable(json);
+
+			} catch(error) {
+				console.log(error);
+			}
+		}
+
+		function makeTable(jsonElements) {
+			const tbody = document.getElementById('resultsBodyTable');
+
+			jsonElements.forEach(element => {
+				let tr = document.createElement('tr');
+				tr.onclick = doSomthing;
+
+
+				for(let i = 0; i < 5; i++) {
+					let td = document.createElement('td');
+
+					if(i === 1) {
+						let img = document.createElement('img');
+
+						img.src = '../static/uploads/' + element[i];
+						img.alt = 'Imagen';
+						img.height = 100;
+
+						td.appendChild(img);
+					} else {
+						td.textContent = element[i];
+					}
+
+					tr.appendChild(td);
+				}
+					tbody.appendChild(tr);
+			})
+		}
+
+		window.onload = getPCMatches();
+		
+	</script>
+</body>
+</html>

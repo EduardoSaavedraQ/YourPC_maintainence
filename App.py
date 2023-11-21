@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect, make_response
+from flask import Flask, render_template, url_for, request, redirect, make_response, jsonify
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -72,6 +72,16 @@ def searchPCPage(admin=None):
 @login_required
 def createAdminUserPage():
     response = make_response(render_template("createAdminUser.html", url_for=url_for))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+
+    return response
+
+@app.route('/selectPCPage')
+@login_required
+def selectPCPage():
+    response = make_response(render_template("selectPC.html"))
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
@@ -297,6 +307,38 @@ def searchPC():
         if cur is not None:
             cur.close()
             conn.close()
+
+@app.route('/selectPCPage/getPCMatches', methods=['POST'])
+def getPCMatches():
+    if request.method == 'POST':
+        print(request.json)
+        id = request.json['input']
+        print(id)
+
+        try:
+            conn = conectar()
+            cur = conn.cursor()
+
+            sql = f"SELECT pk_nombre, imagen_filename, descripcion, precio, proposito FROM pc WHERE pk_nombre LIKE '{id}%';"
+
+            cur.execute(sql)
+
+            res = cur.fetchall()
+            res = [list(tupl) for tupl in res]
+
+            print(res)
+
+            return jsonify(res)
+        
+        except(mysql.connector.DatabaseError) as error:
+            print(error)
+        
+        finally:
+            if cur is not None:
+                cur.close()
+                conn.close()
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
