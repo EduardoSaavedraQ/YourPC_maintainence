@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import mysql.connector
 from conectar import conectar
+import os
 
 app = Flask(__name__)
 app.secret_key = 'una clave secreta muy segura'
@@ -87,6 +88,34 @@ def selectPCPage():
     response.headers['Expires'] = '0'
 
     return response
+
+@app.route('/modifyPCPage/<string:id>')
+@login_required
+def modifyPCPage(id):
+    try:
+        conn = conectar()
+        cur = conn.cursor()
+
+        print(id)
+
+        sql = f"SELECT pk_nombre, precio, proposito, descripcion, imagen_filename FROM pc WHERE pk_nombre = '{id}'"
+        print("llega")
+        
+        cur.execute(sql)
+
+        res = cur.fetchone()
+
+        res = list(res)
+
+        return render_template("modifyPC.html", pc=res)
+    
+    except(mysql.connector.Error):
+        return "No se ha podido cargar la PC"
+
+    finally:
+        if cur is not None:
+            cur.close()
+            conn.close()
 
 @app.route('/SignUp', methods=['POST'])
 def SignUp():
@@ -338,7 +367,86 @@ def getPCMatches():
                 cur.close()
                 conn.close()
 
+@app.route('/updatePC/<string:id>', methods=['POST'])
+def savePCChanges(id):
+    newPCName = request.form['PC Name']
+    newPrice = request.form['Price']
+    newPurpose = request.form['Purpose']
+    newDescription = request.form['Description']
+    newImage = None
+    newFilename = ''
 
+    if 'Image' in request.files:
+        newImage = request.files['Image']
+        newFilename = secure_filename(newImage.filename)
+
+    try:
+        conn = conectar()
+        cur = conn.cursor()
+
+        currentImageRes = None
+
+        if newFilename != '':
+            sqlCurrentImage = f"SELECT imagen_filename FROM pc WHERE pk_nombre = '{id}';"
+            cur.execute(sqlCurrentImage)
+            currentImageRes = cur.fetchone()[0]
+        
+        sqlUpdate = f"UPDATE pc SET pk_nombre = '{newPCName}', precio = {newPrice}, descripcion = '{newDescription}', proposito = {newPurpose}" 
+
+        if newFilename != '':
+            sqlUpdate += f", imagen_filename = '{newFilename}'"
+        
+        sqlUpdate += f" WHERE pk_nombre = '{id}';"
+        print(sqlUpdate)
+
+        cur.execute(sqlUpdate)
+
+        if newFilename != '':
+            currentFilename = f'static/uploads/{currentImageRes}'
+            os.remove(currentFilename)
+
+            newImage.save('static/uploads/' + newFilename)
+
+        return redirect(url_for('modifyPCPage', id=newPCName))
+
+    except(mysql.connector.DatabaseError) as error:
+        print(error)
+
+    finally:
+        if cur is not None:
+            cur.close()
+            conn.close()
+
+@app.route('/modifyPC/getPC', methods=['POST'])
+def getPC():
+    if request.method == 'POST':
+        pcID = request.json['input']
+
+        try:
+            conn = conectar()
+            cur = conn.cursor()
+
+            sql = f"SELECT pk_nombre FROM pc WHERE pk_nombre = '{pcID}';"
+
+            cur.execute(sql)
+
+            res = cur.fetchone()
+
+            if res is None:
+                return jsonify(None)
+            
+            res = list(res)
+            print(res)
+
+            return jsonify(res)
+        
+        except(mysql.connector.DatabaseError) as error:
+            print(error)
+        
+        finally:
+            if cur is not None:
+                cur.close()
+                conn.close()
 
 if __name__ == '__main__':
     app.run(debug=True)

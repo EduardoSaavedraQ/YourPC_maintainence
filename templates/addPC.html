@@ -67,7 +67,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-2" for="Precio">Imagen:</label>
+                <label class="control-label col-sm-2" for="Imagen">Imagen:</label>
                 <div class="col-sm-10">
                     <input type="file" class="form-control-file" id="Imagen" placeholder="Inserte una imagen de la PC" name="Imagen" onchange="previewImage()">
                     <img class="img-responsive" id="imgPreview" src="" alt="Imagen">
@@ -100,18 +100,6 @@
 
             reader.readAsDataURL(image);
         }
-
-        // Obtener la imagen seleccionada
-        const image = document.querySelector("#Imagen");
-
-        // Cuando se cambia la imagen, ejecutar la función
-        image.addEventListener("change", () => {
-        // Obtener la imagen del input
-        const selectedImage = image.files[0];
-
-        // Hacer algo con la imagen
-        console.log(selectedImage);
-        });
     </script>
 </body>
 </html>

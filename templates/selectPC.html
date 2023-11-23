@@ -71,8 +71,9 @@
 	</div>
 	<script>
 
-		function doSomthing() {
-				window.location.href="{{url_for('yourPCHome', admin=1)}}"
+		function goToModifyPCPage(tr) {
+			pcName = tr.childNodes[0].textContent;
+			window.location.href = `/modifyPCPage/${pcName}`;
 		}
 
 		function emptyTable() {
@@ -120,7 +121,9 @@
 
 			jsonElements.forEach(element => {
 				let tr = document.createElement('tr');
-				tr.onclick = doSomthing;
+				tr.onclick = function(event) {
+					goToModifyPCPage(event.currentTarget);
+				}
 
 
 				for(let i = 0; i < 5; i++) {
