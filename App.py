@@ -240,7 +240,7 @@ def uploadPC(admin_id):
 
         cur.execute(f"INSERT INTO pc(pk_nombre, fk_id_admin, descripcion, precio, proposito, imagen_filename) VALUES('{nombrePC}', '{admin_id}', '{descripcionPC}', {precioPC}, {propositoPC}, '{filename}');")
 
-        return redirect(url_for("yourPCHome.html", admin=1))
+        return redirect(url_for("yourPCHome", admin=1))
     except(mysql.connector.DatabaseError) as error:
         print(error)
         return "Error en la inserción de los datos"
@@ -447,6 +447,36 @@ def getPC():
             if cur is not None:
                 cur.close()
                 conn.close()
+
+@app.route('/deletePC', methods=['POST'])
+def deletePC():
+    pcName = request.json['id']
+
+    try:
+        conn = conectar()
+        cur = conn.cursor()
+
+        sqlGetPCImageFilename = f"SELECT imagen_filename FROM pc WHERE pk_nombre = '{pcName}'"
+
+        cur.execute(sqlGetPCImageFilename)
+
+        filename = cur.fetchone()[0]
+
+        sqlDeletion = f"DELETE FROM pc WHERE pk_nombre = '{pcName}'"
+
+        cur.execute(sqlDeletion)
+        os.remove(f'static/uploads/{filename}')
+
+        return redirect(url_for('selectPCPage'))
+    
+    except(mysql.connector.Error) as error:
+        print(error)
+        return jsonify(None)
+    
+    finally:
+        if cur is not None:
+            cur.close()
+            conn.close()
 
 if __name__ == '__main__':
     app.run(debug=True)

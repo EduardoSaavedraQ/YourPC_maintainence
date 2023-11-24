@@ -88,9 +88,44 @@
 			</div>
 			<button style="margin-bottom: 10px;" type="submit" id="Save" class="btn btn-success">Guardar cambios</button>
 		</form>
-		<a href="{{url_for('selectPCPage')}}"><button class="btn btn-danger">Cancelar</button></a>
+		<button style="display: block; margin-bottom: 10px;" class="btn btn-danger" onclick="deletePC()">Eliminar PC</button>
+		<a href="{{url_for('selectPCPage')}}"><button class="btn btn-warning">Cancelar</button></a>
 	</div>
 	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			let selectElement = document.getElementById('Purpose');
+
+			for(let i = 0; i < selectElement.options.length; i++) {
+				if(selectElement.options[i].value == '{{pc[2]}}') {
+					selectElement.options[i].selected = true;
+				}
+			}
+		});
+
+		async function deletePC() {
+			try {
+				const response = await fetch('{{url_for("deletePC")}}', {
+					method: 'POST',
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						id: "{{pc[0]}}"
+					})
+				});
+
+				if(!response.ok)
+					throw new Error("No se ha podido eliminar la PC de la base de datos. Intente de nuevo más tarde");
+				else
+					window.location.href = "{{url_for('selectPCPage')}}";
+
+			} catch(error) {
+				console.log(error);
+				alert(error);
+			}
+		}
+
 		function showWarningRepitedName() {
 			let span = document.getElementById('warningPCNameRepited');
 			let saveButton = document.getElementById('Save');
