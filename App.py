@@ -284,8 +284,8 @@ def makeTuplePorpousesForSQL(list_of_pourposes):
 
     return tuplestring
 
-@app.route('/searchPC', methods=['POST'])
-def searchPC():
+@app.route('/searchPC/<int:admin>', methods=['POST'])
+def searchPC(admin=None):
     #Obtiene el rango de precios
     rango_precio = request.form['rango_precio']
 
@@ -338,7 +338,7 @@ def searchPC():
         print("La cantidad de resultados es:", cantidad)
 
         if cantidad == 0:
-            return render_template('searchPC.html', no_results = True)
+            return render_template('searchPC.html', no_results = True, admin=admin)
 
         from porpousesDic import porpousesDic
 
@@ -346,10 +346,40 @@ def searchPC():
             print(r)
             r[4] = porpousesDic[r[4]]
         
-        return render_template('searchPC.html', results = resultados)
+        return render_template('searchPC.html', results = resultados, admin=admin)
 
     except(mysql.connector.DatabaseError) as error:
         print(error)
+    finally:
+        if cur is not None:
+            cur.close()
+            conn.close()
+
+@app.route('/addPCToNotebook', methods=['POST'])
+def addPCToNotebook():
+    pcName = request.json['pcName']
+
+    try:
+        conn = conectar()
+        cur = conn.cursor()
+
+        sqlSearching = f"SELECT * FROM usuarios_pcs WHERE fk_id_usuario = '{current_user.id}' AND fk_id_pc = '{pcName}';"
+        cur.execute(sqlSearching)
+
+        res = cur.fetchone()
+
+        if res is not None:
+            raise Exception("PC ya añadida a la libreta")
+
+        sqlInsertion = f"INSERT INTO usuarios_pcs VALUES ('{current_user.id}', '{pcName}');"
+
+        cur.execute(sqlInsertion)
+
+        return jsonify(None)
+    
+    except(mysql.connector.Error, Exception) as error:
+        print(error)
+    
     finally:
         if cur is not None:
             cur.close()

@@ -36,7 +36,7 @@
     </nav>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-5 col-md-4" style="background-color: #29272A; padding-bottom: 6px;">
+            <div class="col-lg-4 col-md-3" style="background-color: #29272A; padding-bottom: 6px;">
                 
                 <div style="text-align: center;">
                     <h2 style="color: #EEE6E6; font-weight: 300;">Comienza a explorar en busca de la PC que siempre has deseado</h2>
@@ -44,7 +44,7 @@
                 </div>
                 
                 <div style="background-color: white; margin-top: 30px; padding-left: 20px; padding-right: 20px;">
-                    <form method="POST" action="/searchPC">
+                    <form method="POST" action="{{url_for('searchPC', admin=admin)}}">
                         <label for="sel1">Seleccione un rango de precios:</label>
                         <select class="form-control" id="rango_precio" name="rango_precio">
                             <option value="0">Sin especificar</option>
@@ -73,7 +73,7 @@
                     </form>
                 </div>
             </div>
-            <div class="col-lg-7 col-md-8">
+            <div class="col-lg-8 col-md-9">
                 <h2 style="font-weight: 300; text-align: center;">Puede ver los resultados aquí:</h2>
 
                 {% if no_results %}
@@ -87,11 +87,12 @@
                         <table class="table-hover" style="height: 593px; overflow-x: scroll; overflow-y: scroll; display: block;">
                             <thead style="position: sticky; top: 0; background-color: #EEE6E6;">
                                 <tr>
-                                    <th>Nombre PC</th>
+                                    <th style="width: 200px;">Nombre PC</th>
                                     <th>Imagen</th>
                                     <th>Descripción</th>
                                     <th>Precio</th>
                                     <th style="padding-right: 10px;">Propósito</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody style="background-color: gray;">
@@ -100,8 +101,11 @@
                                     <td>{{r[0]}}</td>
                                     <td><img src="../static/uploads/{{r[1]}}" style="width: 100px;" alt="Imagen de PC"></td>
                                     <td>{{r[2]}}</td>
-                                    <td>{{r[3]}}</td>
+                                    <td>${{r[3]}}</td>
                                     <td>{{r[4]}}</td>
+                                    <td>
+                                        <button class="btn btn-primary" onclick="addPCToNotebook('{{r[0]}}')">Agregar a libreta</button>
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -111,34 +115,29 @@
             </div>
         </div>
     </div>
-    <!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script>
-        $(document).on("wheel", function(event) {
-            // Evitamos el evento de alejamiento
-            event.preventDefault();
-        });
-    </script> -->
-    <!-- <p>
-        <img class="img-responsive" src="{{url_for('static',filename='YourPCLogo1.jpg')}}" style="height: 300px; display: block; margin: 0 auto;">
-    </p>
-    <div class="container-fluid">
-        <form class="form-horizontal" method="POST" enctype="multipart/form-data" action="/uploadPC/{{current_user.id}}">
-            <div class="form-group">
-                <label>Seleccione los propósitos de la PC</label> <br>
-                <label class="checkbox-inline">
-                    <input type="checkbox"> Oficina
-                </label>
-                <label class="checkbox-inline">
-                    <input type="checkbox"> Programación
-                </label>
-                <label class="checkbox-inline">
-                    <input type="checkbox"> Gaming
-                </label>
-                <label class="checkbox-inline">
-                    <input type="checkbox"> Diseño/Edicion
-                </label>
-            </div>
-        </form>
-    </div> -->
+        async function addPCToNotebook(pcName) {
+            try {
+                const response = await fetch('{{url_for("addPCToNotebook")}}', {
+                    method: 'POST',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        pcName: pcName
+                    })
+                });
+
+                if(response.ok)
+                    alert("PC añadida a la libreta");
+                else
+                    throw new Error("No se ha podido añadir a la libreta. Revise si ya ha sido añadida previamente");
+
+            } catch(error) {
+                alert(error);
+            }
+        }
+    </script>
 </body>
 </html>
