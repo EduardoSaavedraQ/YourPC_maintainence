@@ -59,6 +59,7 @@
 						<th style="width: 450px;">Descripción</th>
 						<th>Precio</th>
 						<th>Propósito</th>
+						<th>Acciones</th>
 					</thead>
 					<tbody style="background-color: gray;" id="Tbody"></tbody>
 				</table>
@@ -66,6 +67,88 @@
 		</div>
 	</div>
 	<script>
+		async function deletePCFromNotebook(pcId) {
+			try {
+				const response = await fetch("{{url_for('deletePCFromNotebook')}}", {
+					method: 'POST',
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						pcId: pcId
+					})
+				});
+
+				if(!response.ok)
+					throw new Error('No se ha podido eliminar');
+
+				location.reload();
+
+			} catch(error) {
+				alert(error);
+			}
+		}
+
+		function makeTable(json) {
+			const tbody = document.getElementById('Tbody');
+
+			json.forEach(element => {
+				let tr = document.createElement('tr');
+
+				for(let i = 0; i < 6; i++) {
+					let td = document.createElement('td');
+
+					switch(i) {
+						case 0: case 2: {
+							td.textContent = element[i];
+						} break;
+						case 1: {
+							let img = document.createElement('img');
+
+							img.src = '../static/uploads/' + element[i];
+							img.height = 100;
+							img.alt = 'Imagen';
+
+							td.appendChild(img);
+						} break;
+						case 3: {
+							td.textContent = '$' + element[i];
+						} break;
+						case 4: {
+							switch(element[i]) {
+								case 1: td.textContent = 'Oficina';
+									break;
+									case 2: td.textContent = 'Programación';
+									break;
+									case 3: td.textContent = 'Gaming';
+									break;
+									case 4: td.textContent = 'Diseño/Edición';
+									break;
+							}
+						} break;
+						case 5: {
+							let button = document.createElement('button');
+
+							button.classList.add('btn');
+							button.classList.add('btn-danger');
+							button.textContent = 'Eliminar de libreta';
+
+							button.onclick = function() {
+								deletePCFromNotebook(element[0]);
+							}
+
+							td.appendChild(button);
+						}
+					}
+
+					tr.appendChild(td);
+				}
+
+				tbody.appendChild(tr);
+			});
+		}
+
 		function showNotebookEmptyCaption() {
 			let caption = document.getElementById('NotebookEmptyCaption');
 
@@ -74,46 +157,8 @@
 
 		function makeAndShowTable(json) {
 			const notebook = document.getElementById('NotebookContainer');
-			const tbody = document.getElementById('Tbody');
 
-			json.forEach(element => {
-				let tr = document.createElement('tr');
-
-				for(let i = 0; i < 5; i++) {
-					let td = document.createElement('td');
-
-					if(i === 1) {
-						let img = document.createElement('img');
-
-						img.src = '../static/uploads/' + element[i];
-						img.height = 100;
-						img.alt = 'Imagen';
-
-						td.appendChild(img);
-					}
-					else
-						if(i === 4)
-							switch(element[i]) {
-								case 1: td.textContent = 'Oficina';
-								break;
-								
-								case 2: td.textContent = 'Programación';
-								break;
-
-								case 3: td.textContent = 'Gaming';
-								break;
-
-								case 4: td.textContent = 'Diseño/Edición';
-								break;
-						}
-						else
-							td.textContent = element[i];
-
-					tr.appendChild(td);
-				}
-
-				tbody.appendChild(tr);
-			});
+			makeTable(json);			
 
 			notebook.style.display = 'block';
 		}

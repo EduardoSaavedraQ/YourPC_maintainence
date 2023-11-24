@@ -523,5 +523,27 @@ def getNoteBook():
             cur.close()
             conn.close()
 
+@app.route('/notebook/deletePCFromNotebook', methods=['POST'])
+def deletePCFromNotebook():
+    pcName = request.json['pcId']
+
+    try:
+        conn = conectar()
+        cur = conn.cursor()
+
+        sql = f"DELETE FROM usuarios_pcs WHERE fk_id_usuario = '{current_user.id}' AND fk_id_pc = '{pcName}';"
+
+        cur.execute(sql)
+
+        return jsonify(None)
+    
+    except(mysql.connector.Error) as error:
+        print(error)
+    
+    finally:
+        if cur is not None:
+            cur.close()
+            conn.close()
+
 if __name__ == '__main__':
     app.run(debug=True)
