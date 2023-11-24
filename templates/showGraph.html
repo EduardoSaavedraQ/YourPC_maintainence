@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráficos con Flask</title>
+</head>
+<body>
+    <h1>Gráfico</h1>
+    <div id="grafico"></div>
+    <script>
+        // Obtener la URL del gráfico del contexto de la plantilla
+        var graphUrl = "{{ graph_url }}";
+
+        // Crear un elemento de imagen y establecer la fuente como la URL del gráfico
+        var imgElement = document.createElement('img');
+        imgElement.src = graphUrl;
+
+        // Obtener el div por su ID y agregar la imagen como hijo
+        var graphDiv = document.getElementById('grafico');
+        graphDiv.appendChild(imgElement);
+    </script>
+</body>
+</html>

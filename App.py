@@ -5,6 +5,12 @@ from werkzeug.utils import secure_filename
 import mysql.connector
 from conectar import conectar
 import os
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
+import numpy as np
 
 app = Flask(__name__)
 app.secret_key = 'una clave secreta muy segura'
@@ -32,6 +38,33 @@ def yourPCHome(admin=None):
     response.headers['Expires'] = '0'
 
     return response
+
+def get_graph():
+    x = np.array([1, 2, 3, 4])
+    y = np.array([10, 15, 13, 17])
+    # Generar un gráfico con Matplotlib
+    #plt.bar(x, y)
+    plt.plot(x, y)
+    plt.title('Ejemplo de Gráfico')
+    plt.xlabel('Eje X')
+    plt.ylabel('Eje Y')
+    plt.xticks(rotation=-90)
+
+    # Guardar el gráfico en un objeto BytesIO
+    img = BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+
+    # Convertir la imagen a base64
+    graph_url = base64.b64encode(img.getvalue()).decode()
+    plt.close()
+
+    return 'data:image/png;base64,{}'.format(graph_url)
+
+@app.route('/showGraphic')
+def  showGraphicPage():
+    graph_url = get_graph()
+    return render_template('showGraph.html', graph_url=graph_url)
 
 @app.route('/signUp')
 def signUp():
