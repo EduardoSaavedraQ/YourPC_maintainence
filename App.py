@@ -107,7 +107,12 @@ def modifyPCPage(id):
 
         res = list(res)
 
-        return render_template("modifyPC.html", pc=res)
+        response = make_response(render_template("modifyPC.html", pc=res))
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+
+        return response
     
     except(mysql.connector.Error):
         return "No se ha podido cargar la PC"
