@@ -5,6 +5,13 @@ from werkzeug.utils import secure_filename
 import mysql.connector
 from conectar import conectar
 import os
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
+import numpy as np
+
 
 app = Flask(__name__)
 app.secret_key = 'una clave secreta muy segura'
@@ -134,6 +141,71 @@ def modifyPCPage(id):
         if cur is not None:
             cur.close()
             conn.close()
+
+def get_graph():
+    try:
+        conn = conectar()
+        cur = conn.cursor()
+
+        sql = """SELECT fk_id_pc, COUNT(fk_id_pc) as cantidad
+                FROM usuarios_pcs
+                GROUP BY fk_id_pc
+                ORDER BY cantidad ASC
+                LIMIT 10;"""
+        
+        cur.execute(sql)
+
+        res = cur.fetchall()
+
+        if len(res) == 0:
+            return None
+
+        x = []
+        y = []
+
+        for r in res:
+            x.append(r[0])
+            y.append(r[1])
+        
+        x = np.array(x)
+        y = np.array(y)
+
+        # Generar un gráfico con Matplotlib
+        plt.bar(x, y, color="blue")
+        plt.title("PCs más guardadas")
+        plt.xlabel("PCs")
+        plt.ylabel("Cantidad de usuarios")
+        plt.xticks(rotation=45, ha='right', fontsize=8)
+        plt.tight_layout()  # Ajustar el diseño para evitar cortes
+
+        # Guardar el gráfico en un objeto BytesIO
+        img = BytesIO()
+        plt.savefig(img, format='png')
+        img.seek(0)
+
+        # Convertir la imagen a base64
+        graph_url = base64.b64encode(img.getvalue()).decode()
+        plt.close()
+
+        return 'data:image/png;base64,{}'.format(graph_url)
+    
+    except(mysql.connector.DatabaseError) as error:
+        print(error)
+    
+    finally:
+        if cur is not None:
+            cur.close()
+            conn.close()
+
+@app.route('/Graphic')
+@login_required
+def showGraphicPage():
+    response = make_response(render_template("graphic.html", graph_url=get_graph()))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+
+    return response
 
 @app.route('/SignUp', methods=['POST'])
 def SignUp():
