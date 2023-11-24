@@ -79,7 +79,7 @@ def searchPCPage(admin=None):
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
-    
+
     return response
 
 @app.route('/createAdminUser')
@@ -113,7 +113,7 @@ def modifyPCPage(id):
 
         sql = f"SELECT pk_nombre, precio, proposito, descripcion, imagen_filename FROM pc WHERE pk_nombre = '{id}'"
         print("llega")
-        
+
         cur.execute(sql)
 
         res = cur.fetchone()
@@ -126,7 +126,7 @@ def modifyPCPage(id):
         response.headers['Expires'] = '0'
 
         return response
-    
+
     except(mysql.connector.Error):
         return "No se ha podido cargar la PC"
 
@@ -195,7 +195,7 @@ def addNewAdmin():
         if res is None:
             hashed_pwd = generate_password_hash(pwd) #Default method="pbkdf2:sha1", alternativa method="pbkdf2:sha512"
             cur.execute(f"INSERT INTO usuarios(pk_nickname, correo, contrasenia, admin) VALUES('{user_id}', '{email}', '{hashed_pwd}', 1);")
-            
+
             return redirect(url_for('yourPCHome', admin=1))
 
         return render_template("createAdminUser.html", repited_account=True)
@@ -225,7 +225,7 @@ def LogIn():
         id = res[0]
         user = User(id)
         login_user(user)
-        
+
         return redirect(url_for('yourPCHome', admin=res[3]))
 
     except(mysql.connector.Error) as error:
@@ -250,7 +250,9 @@ def uploadPC(admin_id):
     propositoPC = int(request.form['Proposito'])
     imagenPC = request.files['Imagen']
     filename = secure_filename(imagenPC.filename)
-    imagenPC.save('static/uploads/' + filename)
+
+    os.makedirs("YourPC_maintainence/static/uploads", exist_ok = True, mode=0o777)
+    imagenPC.save("YourPC_maintainence/static/uploads/" + filename)
 
     try:
         conn = conectar()
@@ -311,7 +313,7 @@ def searchPC(admin=None):
         sql_statement = "SELECT pk_nombre, imagen_filename, descripcion, precio, proposito FROM pc"
         sql_precio = f"(precio {rango_precio})"
         sql_propositos = f"(proposito IN {makeTuplePorpousesForSQL(propositos)})"
-        
+
         #Verifica si existen condiciones para la consulta
         if rango_precio != "0" or len(propositos) != 0:
             sql_statement += " WHERE "
@@ -345,7 +347,7 @@ def searchPC(admin=None):
         for r in resultados:
             print(r)
             r[4] = porpousesDic[r[4]]
-        
+
         return render_template('searchPC.html', results = resultados, admin=admin)
 
     except(mysql.connector.DatabaseError) as error:
@@ -376,10 +378,10 @@ def addPCToNotebook():
         cur.execute(sqlInsertion)
 
         return jsonify(None)
-    
+
     except(mysql.connector.Error, Exception) as error:
         print(error)
-    
+
     finally:
         if cur is not None:
             cur.close()
@@ -406,10 +408,10 @@ def getPCMatches():
             print(res)
 
             return jsonify(res)
-        
+
         except(mysql.connector.DatabaseError) as error:
             print(error)
-        
+
         finally:
             if cur is not None:
                 cur.close()
@@ -438,22 +440,22 @@ def savePCChanges(id):
             sqlCurrentImage = f"SELECT imagen_filename FROM pc WHERE pk_nombre = '{id}';"
             cur.execute(sqlCurrentImage)
             currentImageRes = cur.fetchone()[0]
-        
-        sqlUpdate = f"UPDATE pc SET pk_nombre = '{newPCName}', precio = {newPrice}, descripcion = '{newDescription}', proposito = {newPurpose}" 
+
+        sqlUpdate = f"UPDATE pc SET pk_nombre = '{newPCName}', precio = {newPrice}, descripcion = '{newDescription}', proposito = {newPurpose}"
 
         if newFilename != '':
             sqlUpdate += f", imagen_filename = '{newFilename}'"
-        
+
         sqlUpdate += f" WHERE pk_nombre = '{id}';"
         print(sqlUpdate)
 
         cur.execute(sqlUpdate)
 
         if newFilename != '':
-            currentFilename = f'static/uploads/{currentImageRes}'
+            currentFilename = f'YourPC_maintainence/static/uploads/{currentImageRes}'
             os.remove(currentFilename)
 
-            newImage.save('static/uploads/' + newFilename)
+            newImage.save('YourPC_maintainence/static/uploads/' + newFilename)
 
         return redirect(url_for('modifyPCPage', id=newPCName))
 
@@ -482,15 +484,15 @@ def getPC():
 
             if res is None:
                 return jsonify(None)
-            
+
             res = list(res)
             print(res)
 
             return jsonify(res)
-        
+
         except(mysql.connector.DatabaseError) as error:
             print(error)
-        
+
         finally:
             if cur is not None:
                 cur.close()
@@ -513,14 +515,14 @@ def deletePC():
         sqlDeletion = f"DELETE FROM pc WHERE pk_nombre = '{pcName}'"
 
         cur.execute(sqlDeletion)
-        os.remove(f'static/uploads/{filename}')
+        os.remove(f'YourPC_maintainence/static/uploads/{filename}')
 
         return redirect(url_for('selectPCPage'))
-    
+
     except(mysql.connector.Error) as error:
         print(error)
         return jsonify(None)
-    
+
     finally:
         if cur is not None:
             cur.close()
@@ -547,7 +549,7 @@ def getNoteBook():
 
     except(mysql.connector.Error) as error:
         print(error)
-    
+
     finally:
         if cur is not None:
             cur.close()
@@ -566,10 +568,10 @@ def deletePCFromNotebook():
         cur.execute(sql)
 
         return jsonify(None)
-    
+
     except(mysql.connector.Error) as error:
         print(error)
-    
+
     finally:
         if cur is not None:
             cur.close()
