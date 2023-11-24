@@ -5,6 +5,13 @@ from werkzeug.utils import secure_filename
 import mysql.connector
 from conectar import conectar
 import os
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
+import numpy as np
+
 
 app = Flask(__name__)
 app.secret_key = 'una clave secreta muy segura'
@@ -134,6 +141,15 @@ def modifyPCPage(id):
         if cur is not None:
             cur.close()
             conn.close()
+
+@app.route('/Graphic')
+def showGraphicPage():
+    response = make_response(render_template("graphic.html"))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+
+    return response
 
 @app.route('/SignUp', methods=['POST'])
 def SignUp():
