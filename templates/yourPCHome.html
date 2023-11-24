@@ -39,7 +39,7 @@
               </li>
               {% endif %}
               <li><a href="{{url_for('searchPCPage', admin=admin)}}">Buscar PC</a></li>
-              <li><a href="#">Libreta</a></li>
+              <li><a href="{{url_for('notebookPage', admin=admin)}}">Libreta</a></li>
               <li><a href="{{url_for('logout')}}">Cerrar sesión</a></li>
             {% else %}
               <li><a href="{{ url_for('logIn') }}"><span class="glyphicon glyphicon-log-in"></span> Acceder</a></li>

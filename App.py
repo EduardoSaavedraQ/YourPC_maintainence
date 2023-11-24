@@ -45,6 +45,19 @@ def logIn():
 def startPage():
     return render_template("startPage.html",url_for=url_for)
 
+@app.route('/notebook/<int:admin>')
+@login_required
+def notebookPage(admin=None):
+    admin_value = admin if admin is not None else False
+
+    response = make_response(render_template("notebook.html", admin=admin_value))
+    response = make_response(render_template("notebook.html", admin=admin_value))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+
+    return response
+
 @app.route('/addPCPage/<int:admin>')
 @app.route('/addPCPage')
 @login_required
@@ -477,6 +490,33 @@ def deletePC():
     except(mysql.connector.Error) as error:
         print(error)
         return jsonify(None)
+    
+    finally:
+        if cur is not None:
+            cur.close()
+            conn.close()
+
+@app.route('/notebook/getNoteBook')
+def getNoteBook():
+    try:
+        conn = conectar()
+        cur = conn.cursor()
+
+        sqlPCsUser = f"SELECT fk_id_pc FROM usuarios_pcs WHERE fk_id_usuario = '{current_user.id}'"
+
+        sqlGetPCMatches = f"SELECT pk_nombre, imagen_filename, descripcion, precio, proposito FROM pc WHERE pk_nombre IN ({sqlPCsUser});"
+
+        cur.execute(sqlGetPCMatches)
+
+        res = cur.fetchall()
+
+        if len(res) == 0:
+            res = None
+
+        return jsonify(res)
+
+    except(mysql.connector.Error) as error:
+        print(error)
     
     finally:
         if cur is not None:

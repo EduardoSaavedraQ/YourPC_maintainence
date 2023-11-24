@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../static/styles/yourPCHome.css">
+	<link rel="icon" type="image/x-icon" href="../static/YourPCLogo2.jpg">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<title>Libreta</title>
+
+	<style>
+		#criticalError {
+			display: block;
+			margin-top: 50px;
+			margin-left: auto;
+			margin-right: auto;
+			width: 50%;
+		}
+
+		#Table {
+			margin-left: auto;
+			margin-right: auto;
+		}
+	</style>
+</head>
+<body style="background-color: purple;">
+	<nav class="navbar navbar-inverse ">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="{{url_for('yourPCHome', admin=admin)}}">YourPC</a>
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>                        
+				</button>
+				<a class="navbar-brand" href="#" ></a>
+			</div>
+			<div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="{{url_for('yourPCHome', admin=admin)}}">Home</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#">Hola, {{current_user.id}}</a></li>
+					<li><a href="{{url_for('logout')}}">Cerrar sesión</a></li>
+					<li><a href="{{url_for('yourPCHome', admin=admin)}}">Cancelar</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div class="container">
+		<div style="display: none;"  id="NotebookEmptyCaption">
+			<h1 style="text-align: center;">Oops! Parace que aún no tienes elementos en tu libreta</h1>
+			<img src="../static/critical-error.jpg" alt="Critical Error" id="criticalError">
+		</div>
+		<div style="display: none;" id="NotebookContainer">
+			<h1 style="text-align: center;">Su libreta</h1>
+			<div style="max-height: 600px; overflow-y: auto; margin: 0 auto;">
+				<table class="table table-hover">
+					<thead style="position: sticky; top: 0; background-color: #EEE6E6;">
+						<th style="width: 300px;">Nombre PC</th>
+						<th style="width: 100px;">Imagen</th>
+						<th style="width: 450px;">Descripción</th>
+						<th>Precio</th>
+						<th>Propósito</th>
+					</thead>
+					<tbody style="background-color: gray;" id="Tbody"></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<script>
+		function showNotebookEmptyCaption() {
+			let caption = document.getElementById('NotebookEmptyCaption');
+
+			caption.style.display = 'block';
+		}
+
+		function makeAndShowTable(json) {
+			const notebook = document.getElementById('NotebookContainer');
+			const tbody = document.getElementById('Tbody');
+
+			json.forEach(element => {
+				let tr = document.createElement('tr');
+
+				for(let i = 0; i < 5; i++) {
+					let td = document.createElement('td');
+
+					if(i === 1) {
+						let img = document.createElement('img');
+
+						img.src = '../static/uploads/' + element[i];
+						img.height = 100;
+						img.alt = 'Imagen';
+
+						td.appendChild(img);
+					}
+					else
+						td.textContent = element[i];
+
+					tr.appendChild(td);
+				}
+
+				tbody.appendChild(tr);
+			});
+
+			notebook.style.display = 'block';
+		}
+
+		async function getNoteBook() {
+			try {
+				const response = await fetch("{{url_for('getNoteBook')}}");
+
+				if(!response.ok)
+					throw new Error("Error al tratar de conectar con la Base de Datos");
+
+				const json = await response.json();
+
+				if(json === null)
+					showNotebookEmptyCaption();
+				else
+					makeAndShowTable(json);
+
+			} catch(error) {
+				alert(error);
+			}
+		}
+
+		document.addEventListener('DOMContentLoaded', getNoteBook());
+	</script>
+</body>
+</html>
