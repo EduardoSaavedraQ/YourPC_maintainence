@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 
-def config(archivo="/home/EduardoSQ/YourPC_maintainence/yourpclb1.ini", seccion="mysql"):
+def config(archivo="/home/YourPC/YourPC_maintainence/yourpc.ini", seccion="mysql"):
     parser = ConfigParser()
     parser.read(archivo)
 
@@ -11,4 +11,4 @@ def config(archivo="/home/EduardoSQ/YourPC_maintainence/yourpclb1.ini", seccion=
             db[param[0]] = param[1]
         return db
     else:
-        raise Exception("Sección {0} no encontada en el archivo '{1}'".format(seccion, archivo))
+        raise Exception("Sección {0} no encontrada en el archivo '{1}'".format(seccion, archivo))
