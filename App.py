@@ -152,7 +152,7 @@ def get_graph():
                 GROUP BY fk_id_pc
                 ORDER BY cantidad ASC
                 LIMIT 10;"""
-        
+
         cur.execute(sql)
 
         res = cur.fetchall()
@@ -166,7 +166,7 @@ def get_graph():
         for r in res:
             x.append(r[0])
             y.append(r[1])
-        
+
         x = np.array(x)
         y = np.array(y)
 
@@ -188,10 +188,10 @@ def get_graph():
         plt.close()
 
         return 'data:image/png;base64,{}'.format(graph_url)
-    
+
     except(mysql.connector.DatabaseError) as error:
         print(error)
-    
+
     finally:
         if cur is not None:
             cur.close()
@@ -648,6 +648,3 @@ def deletePCFromNotebook():
         if cur is not None:
             cur.close()
             conn.close()
-
-if __name__ == '__main__':
-    app.run(debug=True)

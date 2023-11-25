@@ -1,0 +1,37 @@
+from conectar import conectar
+
+conn = conectar()
+cur = conn.cursor()
+
+cur.execute("""INSERT INTO pc(pk_nombre, fk_id_admin, descripcion, precio, proposito, imagen_filename)
+            VALUES('Rtx4060 Laptop Gamer Ryzen 7 7735h Machenike L16pro 16g 1t', 'root', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 22788.27, 3, 'D_NQ_NP_2X_969273-CBT72457838654.jpg')""")
+
+cur.execute("""INSERT INTO pc(pk_nombre, fk_id_admin, descripcion, precio, proposito, imagen_filename)
+            VALUES('Laptop Chuwi HeroBook Pro space gray 14.1", Intel Celeron N4020 8GB de RAM 256GB SSD, Intel UHD Graphics 600 1920x1080px Windows 11 Home', 'root', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 5977.93, 1, 'D_NQ_NP_2X_969273-CBT72457838654.jpg')""")
+
+cur.execute("""INSERT INTO pc(pk_nombre, fk_id_admin, descripcion, precio, proposito, imagen_filename)
+            VALUES('Laptop HP 14-FQ1025cl azul táctil AMD Ryzen 7 16GB de RAM 512GB SSD, AMD Radeon Graphics Windows 11 Home", Intel Celeron N4020 8GB de RAM 256GB SSD, Intel UHD Graphics 600 1920x1080px Windows 11 Home', 'root', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 16999, 2, 'D_NQ_NP_2X_969273-CBT72457838654.jpg')""")
+
+cur.execute("""INSERT INTO pc(pk_nombre, fk_id_admin, descripcion, precio, proposito, imagen_filename)
+            VALUES('Xtreme Pc Xpg Geforce Rtx 4080 I9 13900kf 32gb Ddr5 Ssd 2tb', 'root', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 51539.40, 4, 'D_NQ_NP_2X_969273-CBT72457838654.jpg')""")
+
+cur.execute("""INSERT INTO pc(pk_nombre, fk_id_admin, descripcion, precio, proposito, imagen_filename)
+            VALUES('Microsoft Surface Studio 2+ 28 1tb 32gb I7 Nvidia Rtx 3060', 'root', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 166248.10, 4, 'D_NQ_NP_2X_969273-CBT72457838654.jpg')""")
+
+cur.execute("""INSERT INTO pc(pk_nombre, fk_id_admin, descripcion, precio, proposito, imagen_filename)
+            VALUES('Cpu Computadora Edicion Video 4k Core I7 32g 1t Gtx1650 Wifi', 'root', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 17900, 4, 'D_NQ_NP_2X_969273-CBT72457838654.jpg')""")
+
+cur.execute("""INSERT INTO pc(pk_nombre, fk_id_admin, descripcion, precio, proposito, imagen_filename)
+            VALUES('Pc Gamer Cpu Amd 5600g Ram 32gb Ddr4 240gb Ssd Hdd 2 Tb', 'root', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 8899, 3, 'D_NQ_NP_2X_969273-CBT72457838654.jpg')""")
+
+cur.execute("""INSERT INTO pc(pk_nombre, fk_id_admin, descripcion, precio, proposito, imagen_filename)
+            VALUES('MacBook Air A1932 (True Tone 2019) gris espacial 13"', 'root', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 16824, 3, 'D_NQ_NP_2X_969273-CBT72457838654.jpg')""")
+
+cur.execute("""INSERT INTO pc(pk_nombre, fk_id_admin, descripcion, precio, proposito, imagen_filename)
+            VALUES('Cpue Completo Dell Optiplex 9020 I5 De 4ta120 Gb Ssd 8gbram (Reacondicionado)', 'root', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 3500, 1, 'D_NQ_NP_2X_969273-CBT72457838654.jpg')""")
+
+cur.execute("""INSERT INTO pc(pk_nombre, fk_id_admin, descripcion, precio, proposito, imagen_filename)
+            VALUES('Pc Intel Gold Wifi Oficina 8gb Ram Ssd 500gb Monitor 19 Kit', 'root', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 7500, 1, 'D_NQ_NP_2X_969273-CBT72457838654.jpg')""")
+
+cur.close()
+conn.close()
